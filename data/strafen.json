@@ -5,8 +5,8 @@
     "name": "Löwe",
     "grund": "Saisonbeitrag (Standard)",
     "betrag": 100,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "9.9.2026"
   },
   {
     "id": 1788968396914,
