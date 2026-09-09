@@ -5,8 +5,8 @@
     "name": "Mateo",
     "grund": "Strafe",
     "betrag": 10,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "9.9.2026"
   },
   {
     "id": 1788972819501,
