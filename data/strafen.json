@@ -8,15 +8,5 @@
     "bezahlt": true,
     "bezahltAm": "9.9.2026",
     "type": "einnahme"
-  },
-  {
-    "id": 1788964581067,
-    "datum": "9.9.2026",
-    "name": "Mannschaftskasse",
-    "grund": "Start der Aufzeichnung (Sep.26)",
-    "betrag": -136.17,
-    "bezahlt": true,
-    "bezahltAm": "9.9.2026",
-    "type": "ausgabe"
   }
 ]
