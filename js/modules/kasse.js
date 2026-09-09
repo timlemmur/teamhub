@@ -103,11 +103,11 @@ async function handleFreieBuchungSubmit(e) {
 
     if (success) {
         alert(`Erfolgreich gebucht: ${art === 'einnahme' ? '+' : ''}${betrag.toFixed(2).replace('.', ',')} € (${grundText})`);
-        
+
         e.target.reset();
         renderKasseStats();
         renderLogbuchModal();
-        
+
         const buchungModal = document.getElementById('buchung-modal');
         if (buchungModal) {
             buchungModal.classList.remove('active');
@@ -450,8 +450,8 @@ export function renderLogbuchModal() {
                                 ${item.bezahlt ? 'Als offen' : 'Als bezahlt'}
                             </button>
                         ` : ''}
-                        <button class="btn-delete-entry" data-id="${item.id}" style="background: #f87171; color: white; border: none; border-radius: 4px; padding: 4px 8px; margin-left: 4px; cursor: pointer;">
-                            🗑️
+                        <button class="btn-delete-entry" data-id="${item.id !== undefined ? item.id : 'undefined'}" style="background: #f87171; color: white; border: none; border-radius: 4px; padding: 4px 8px; margin-left: 4px; cursor: pointer;">
+                        🗑️
                         </button>
                     </td>
                 ` : ''}
@@ -467,8 +467,11 @@ export function renderLogbuchModal() {
 function attachAdminListeners() {
     document.querySelectorAll('.btn-toggle-pay').forEach(btn => {
         btn.addEventListener('click', async (e) => {
-            const id = Number(e.target.getAttribute('data-id'));
-            const item = strafenLogbook.find(s => s.id === id);
+            const rawId = e.target.getAttribute('data-id');
+            const id = Number(rawId);
+
+            // Eintrag per ID finden, oder den ersten fehlerhaften Eintrag, falls ID undefined ist
+            const item = strafenLogbook.find(s => String(s.id) === String(rawId) || (!s.id && rawId === "undefined"));
 
             if (item) {
                 item.bezahlt = !item.bezahlt;
@@ -494,8 +497,15 @@ function attachAdminListeners() {
         btn.addEventListener('click', async (e) => {
             if (!confirm('Möchtest du diesen Eintrag wirklich unwiderruflich löschen?')) return;
 
-            const id = Number(e.target.getAttribute('data-id'));
-            strafenLogbook = strafenLogbook.filter(s => s.id !== id);
+            const rawId = e.target.getAttribute('data-id');
+
+            // Robustes Filtern: Löscht den Eintrag mit passender ID oder den unvollständigen "Ghost"-Eintrag
+            strafenLogbook = strafenLogbook.filter(s => {
+                if (!s.id || String(s.id) === "undefined" || String(s.id) === "null") {
+                    return rawId !== "undefined" && rawId !== "null" && rawId !== "";
+                }
+                return String(s.id) !== String(rawId);
+            });
 
             const success = await saveStrafenToRepo(strafenLogbook);
             if (success) {
