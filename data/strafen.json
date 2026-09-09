@@ -1,5 +1,23 @@
 [
   {
+    "id": 1788967705231,
+    "datum": "9.9.2026",
+    "name": "Patrick",
+    "grund": "Bier verschüttet (2x)",
+    "betrag": 10,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
+    "id": 1788967705245,
+    "datum": "9.9.2026",
+    "name": "Patrick",
+    "grund": "Rauchen/Trinken im Trikot",
+    "betrag": 5,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
     "id": 1788967631239,
     "datum": "9.9.2026",
     "name": "Len",
