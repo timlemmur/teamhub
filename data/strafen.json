@@ -14,8 +14,8 @@
     "name": "Jannis",
     "grund": "Saisonbeitrag (Standard)",
     "betrag": 100,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "9.9.2026"
   },
   {
     "id": 1788964836336,
@@ -23,8 +23,8 @@
     "name": "Jannis",
     "grund": "Strafe",
     "betrag": 3,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "9.9.2026"
   },
   {
     "id": 1788964817980,
@@ -32,8 +32,8 @@
     "name": "Fabi",
     "grund": "Strafe",
     "betrag": 2,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "9.9.2026"
   },
   {
     "id": 1788964798941,
