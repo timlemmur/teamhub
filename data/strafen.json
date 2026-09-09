@@ -23,8 +23,8 @@
     "name": "Jannis",
     "grund": "Strafe",
     "betrag": 3,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "9.9.2026"
   },
   {
     "id": 1788967602227,
