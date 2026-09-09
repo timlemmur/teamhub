@@ -1,5 +1,23 @@
 [
   {
+    "id": 1788964836362,
+    "datum": "9.9.2026",
+    "name": "Jannis",
+    "grund": "Saisonbeitrag (Standard)",
+    "betrag": 100,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
+    "id": 1788964836336,
+    "datum": "9.9.2026",
+    "name": "Jannis",
+    "grund": "Strafe",
+    "betrag": 3,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
     "id": 1788964817980,
     "datum": "9.9.2026",
     "name": "Fabi",
