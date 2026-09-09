@@ -1,0 +1,284 @@
+/* ==========================================================================
+   1. VERTIKALES KASTEN-KARUSSELL (🍺)
+   ========================================================================== */
+
+.carousel-toolbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.btn-today {
+    background: #334155;
+    color: #38bdf8;
+    border: 1px solid #38bdf8;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-today:hover {
+    background: #38bdf8;
+    color: #0f172a;
+}
+
+.person-select {
+    flex: 1;
+    background: #0f172a;
+    color: #f8fafc;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+}
+
+.person-select:focus {
+    border-color: #38bdf8;
+}
+
+.carousel-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding: 4px 0;
+}
+
+/* Viewport-Höhe für 5 sichtbare Elemente (5 x 60px = 300px) */
+.carousel-viewport {
+    height: 200px;
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+}
+
+.carousel-track {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.carousel-item {
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    padding: 8px 16px;
+    border-radius: 8px;
+    opacity: 0.4;
+    transform: scale(0.9);
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+/* Aktives Element in der Mitte */
+.carousel-item.active {
+    opacity: 1;
+    transform: scale(1.05);
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+.carousel-item .item-date {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.carousel-item.active .item-date {
+    color: #38bdf8;
+}
+
+.carousel-item .item-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #f8fafc;
+}
+
+.carousel-item.active .item-name {
+    font-size: 1.3rem;
+    color: #ffffff;
+}
+
+.carousel-nav {
+    background: transparent;
+    border: none;
+    color: #38bdf8;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 4px 12px;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.carousel-nav:hover {
+    color: #ffffff;
+    transform: scale(1.2);
+}
+
+.no-matches {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.9rem;
+    padding: 20px 0;
+}
+
+
+/* ==========================================================================
+   2. HORIZONTALES KIOSK-KARUSSELL (🍕)
+   ========================================================================== */
+
+.kiosk-carousel {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.kiosk-viewport {
+    width: 100%;
+    overflow: hidden;
+    padding: 6px 0;
+}
+
+.kiosk-track {
+    display: flex;
+    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.kiosk-card {
+    min-width: 100%;
+    box-sizing: border-box;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid #334155;
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.kiosk-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 8px;
+}
+
+.kiosk-opponent {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.kiosk-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+}
+
+.kiosk-badge.iggelheim {
+    background: #eab308;
+    color: #0f172a;
+}
+
+.kiosk-badge.meckenheim {
+    background: #22c55e;
+    color: #0f172a;
+}
+
+.kiosk-meta {
+    font-size: 0.85rem;
+    color: #38bdf8;
+    font-weight: 600;
+}
+
+.kiosk-assignments {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.kiosk-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.88rem;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+.kiosk-label {
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.kiosk-value {
+    color: #f8fafc;
+    font-weight: 700;
+}
+
+/* Kiosk-Footer-Navigation (Buttons & Dots zusammen unter der Karte) */
+.kiosk-footer-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.kiosk-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.kiosk-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #334155;
+    transition: all 0.2s ease;
+}
+
+.kiosk-dot.active {
+    background: #38bdf8;
+    width: 18px;
+    border-radius: 4px;
+}
+
+.kiosk-nav {
+    position: static;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid #334155;
+    color: #38bdf8;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.kiosk-nav:hover {
+    background: #38bdf8;
+    color: #0f172a;
+    border-color: #38bdf8;
+}

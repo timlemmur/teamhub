@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "datum": "09.09.2026",
+    "name": "Max Mustermann",
+    "grund": "Zu spät zum Training",
+    "betrag": 5.00,
+    "bezahlt": false,
+    "bezahltAm": null
+  }
+]

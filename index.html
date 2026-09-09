@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSG Iggelheim/Meckenheim 2 - Team Hub</title>
+
+    <!-- CSS Module -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/components/carousel.css">
+    <link rel="stylesheet" href="css/components/modal.css">
+    <link rel="stylesheet" href="css/components/tables.css">
+
+    <!-- External Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <!-- HEADER SECTION -->
+    <header class="app-header">
+        <div class="header-container">
+            <!-- Links: Logo & Text -->
+            <div class="brand-area">
+                <img src="matchday-generator/logos/luchse.png" alt="MSG Iggelheim/Meckenheim Logo" class="team-logo">
+                <div>
+                    <h1>TEAM HUB</h1>
+                    <p class="subtitle">MSG Iggelheim/Meckenheim 2 • Saison 2026/2027</p>
+                </div>
+            </div>
+
+            <!-- Rechts: Admin Button -->
+            <button id="btn-admin-login" class="btn-admin-header">
+                🔒 Admin Login
+            </button>
+        </div>
+    </header>
+
+    <!-- DASHBOARD GRID CONTAINER -->
+    <main class="dashboard-container">
+
+        <!-- 1. KASTEN-PLANER -->
+        <section class="card highlight-card">
+            <div class="card-header">
+                <span class="icon">🍺</span>
+                <h2>Nächster Kasten:</h2>
+            </div>
+            <div class="card-body">
+                <div class="carousel-toolbar">
+                    <button class="btn-today" id="kasten-today-btn" title="Auf heute zurückspringen">📍 Heute</button>
+                    <select class="person-select" id="kasten-person-filter">
+                        <option value="ALL">Alle Personen</option>
+                    </select>
+                </div>
+
+                <div class="carousel-container">
+                    <button class="carousel-nav prev" id="kasten-prev-btn" aria-label="Vorheriger">▲</button>
+
+                    <div class="carousel-viewport">
+                        <div class="carousel-track" id="kasten-carousel-track"></div>
+                    </div>
+
+                    <button class="carousel-nav next" id="kasten-next-btn" aria-label="Nächster">▼</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. MANNSCHAFTSKASSE -->
+        <section class="card highlight-card">
+            <div class="card-header">
+                <span class="icon">💰</span>
+                <h2>Mannschaftskasse & Strafen</h2>
+            </div>
+            <div class="card-body">
+                <div class="kasse-stats-grid">
+                    <div class="kasse-stat-box clickable" id="btn-open-logbuch" title="Klicken für Strafenlogbuch">
+                        <span class="stat-label">Kassenstand</span>
+                        <span class="stat-value primary" id="kassenstand-val">0,00 €</span>
+                    </div>
+                    <div class="kasse-stat-box clickable" id="btn-open-offen" title="Klicken für offene Strafen">
+                        <span class="stat-label">Offene Strafen</span>
+                        <span class="stat-value warning" id="offene-strafen-val">0,00 €</span>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="kasseChart"></canvas>
+                </div>
+
+                <div class="kasse-actions">
+                    <button class="btn-primary" id="btn-open-strafen">📋 Strafenkatalog</button>
+                    <button class="btn-secondary" id="btn-open-aemter">🎖️ Ämter</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. KIOSKPLAN & DIENSTE -->
+        <section class="card highlight-card">
+            <div class="card-header">
+                <span class="icon">🍕</span>
+                <h2>Kiosk- & Dienstplan</h2>
+            </div>
+            <div class="card-body">
+                <div class="kiosk-carousel">
+                    <div class="kiosk-viewport">
+                        <div class="kiosk-track" id="kiosk-carousel-track"></div>
+                    </div>
+                </div>
+
+                <!-- Navigation & Dots zusammen unter der Box -->
+                <div class="kiosk-footer-nav">
+                    <button class="kiosk-nav prev" id="kiosk-prev-btn" aria-label="Vorheriges Spiel">❮</button>
+                    <div class="kiosk-dots" id="kiosk-dots"></div>
+                    <button class="kiosk-nav next" id="kiosk-next-btn" aria-label="Nächstes Spiel">❯</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. TRIKOTWÄSCHE -->
+        <section class="card">
+            <div class="card-header">
+                <span class="icon">👕</span>
+                <h2>Trikotwäsche</h2>
+            </div>
+            <div class="card-body">
+                <p class="card-subtext">Nächstes Spiel:</p>
+                <p class="highlight-name" id="current-washer">Noch offen</p>
+                <button class="btn btn-secondary" id="btn-open-waesche">Rotationsplan öffnen</button>
+            </div>
+        </section>
+
+        <!-- 5. MATCHDAY GENERATOR -->
+        <section class="card matchday-card">
+            <div class="card-header">
+                <span class="icon">🎨</span>
+                <h2>Matchday Generator</h2>
+            </div>
+            <div class="card-body">
+                <div class="matchday-preview-container">
+                    <div class="matchday-image-wrapper">
+                        <img src="assets/matchday-graphic.png" alt="Matchday Grafik Vorschau"
+                            class="matchday-preview-img">
+                    </div>
+                </div>
+
+                <button class="btn-primary" id="btn-start-generator">
+                    🚀 Generator starten
+                </button>
+            </div>
+        </section>
+
+        <!-- 6. QUICK LINKS -->
+        <section class="card">
+            <div class="card-header">
+                <span class="icon">🔗</span>
+                <h2>Quick Links</h2>
+            </div>
+            <div class="card-body">
+                <div class="quick-links-grid">
+                    <a href="https://www.paypal.me/SGIggMeck2" target="_blank" class="quick-link-btn paypal">
+                        <i class="fa-brands fa-paypal link-icon"></i>
+                        <span>Strafe zahlen</span>
+                    </a>
+                    <a href="https://www.instagram.com/sg_iggelheimmeckenheim/" target="_blank"
+                        class="quick-link-btn instagram">
+                        <i class="fa-brands fa-instagram link-icon"></i>
+                        <span>Instagram</span>
+                    </a>
+                    <a href="https://www.handball.net/team/80929" target="_blank" class="quick-link-btn handball-net">
+                        <img src="https://www.handball.net/assets/images/HandballnetLogo.svg" alt="Handball.net Logo"
+                            class="link-icon img-logo">
+                        <span>Liga Tabelle</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <a href="https://github.com/timlemmur/matchday-generator" target="_blank" rel="noopener noreferrer"
+        class="github-link" title="GitHub Repository">
+        <svg viewBox="0 0 24 24" class="github-icon">
+            <path fill="currentColor"
+                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+        </svg>
+        <span>GitHub</span>
+    </a>
+
+    <!-- MODALS -->
+    <div id="strafen-modal" class="modal-overlay">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>📋 Strafenkatalog 2026/2027</h2>
+                <button class="modal-close" data-close="strafen">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="strafen-info-box">
+                    <div><strong>Kassenwart:</strong> Tim Kehrer | <strong>stv.:</strong> Christian Sommer</div>
+                    <div><strong>PayPal:</strong> <a href="https://paypal.me/SGIggMeck2" target="_blank"
+                            rel="noopener">paypal.me/SGIggMeck2</a></div>
+                </div>
+
+                <div class="table-container">
+                    <table class="strafen-table">
+                        <thead>
+                            <tr>
+                                <th>Vergehen</th>
+                                <th style="text-align: right;">Strafe</th>
+                            </tr>
+                        </thead>
+                        <tbody id="strafen-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="aemter-modal" class="modal-overlay">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>🎖️ Ämterverteilung 2026/2027</h2>
+                <button class="modal-close" data-close="aemter">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="table-container">
+                    <table class="strafen-table">
+                        <thead>
+                            <tr>
+                                <th>Amt / Aufgabe</th>
+                                <th>Verantwortliche(r)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="aemter-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="logbuch-modal" class="modal-overlay">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>📜 Strafen-Logbuch & Historie</h2>
+                <button class="modal-close" data-close="logbuch">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="table-container">
+                    <table class="strafen-table">
+                        <thead>
+                            <tr>
+                                <th>Datum</th>
+                                <th>Spieler</th>
+                                <th>Vergehen / Posten</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Betrag</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logbuch-modal-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="offene-strafen-modal" class="modal-overlay">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>⚠️ Unbezahlte Strafen</h2>
+                <button class="modal-close" data-close="offeneStrafen">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="table-container">
+                    <table class="strafen-table">
+                        <thead>
+                            <tr>
+                                <th>Datum</th>
+                                <th>Spieler</th>
+                                <th>Vergehen</th>
+                                <th style="text-align: right;">Betrag</th>
+                            </tr>
+                        </thead>
+                        <tbody id="offene-strafen-modal-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN LOGIN MODAL -->
+    <div id="admin-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="btn-close-modal" class="modal-close">&times;</button>
+            <h3>🔒 Admin Login</h3>
+            <p class="modal-subtitle">Gib das Passwort ein, um Admin-Rechte zu aktivieren.</p>
+
+            <form id="admin-login-form">
+                <div class="form-group">
+                    <input type="password" id="admin-password" placeholder="Passwort eingeben" required
+                        autocomplete="current-password">
+                </div>
+                <p id="login-error-msg" class="error-message hidden">Falsches Passwort!</p>
+                <button type="submit" class="btn-primary">Anmelden</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN JAVASCRIPT -->
+    <script type="module" src="js/main.js"></script>
+
+</body>
+
+</html>

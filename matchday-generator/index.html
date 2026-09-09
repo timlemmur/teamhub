@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handball Matchday Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Neues zentrales Stylesheet -->
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+    <h1>Matchday Graphic Generator</h1>
+
+    <div class="main-container">
+        <div class="controls">
+
+            <!-- KATEGORIE 1: TITEL, TEXT & SPIELERFOTO -->
+            <div class="accordion-item active">
+                <button class="accordion-header">
+                    <span>1. Titel, Text & Spieler-Foto</span>
+                    <span class="material-icons icon-toggle">expand_more</span>
+                </button>
+                <div class="accordion-content">
+                    <div class="form-group">
+                        <label for="input-matchday">Haupt-Titel</label>
+                        <input type="text" id="input-matchday" value="MATCHDAY">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="select-title">Spielart (Schnellauswahl)</label>
+                        <select id="select-title">
+                            <option value="HEIMSPIEL" selected>HEIMSPIEL</option>
+                            <option value="AUSWÄRTSSPIEL">AUSWÄRTSSPIEL</option>
+                            <option value="DERBYTAG">DERBYTAG</option>
+                            <option value="TOPSPIEL">TOPSPIEL</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-hashtag">Hashtag</label>
+                        <input type="text" id="input-hashtag" value="#lossemasbrenne">
+                    </div>
+
+                    <hr class="separator">
+
+                    <!-- In Kategorie 1 anstelle des alten <select> einfügen -->
+                    <div class="form-group">
+                        <label for="input-player-name">Spieler / Template</label>
+                        <div class="input-with-dropdown">
+                            <input type="text" id="input-player-name" value="Standard (base.png)" readonly>
+                            <button type="button" class="btn-quick-select" id="btn-open-modal-player"
+                                title="Schnellauswahl öffnen">
+                                <span class="material-icons">grid_view</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="subtle-upload">
+                        <label for="input-player-img" class="file-label">
+                            <span class="material-icons">cloud_upload</span>
+                            <span id="label-player-img">Eigenes Bild hochladen</span>
+                        </label>
+                        <input type="file" id="input-player-img" accept="image/*" class="hidden-file-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL POPUP: SPIELER & TEMPLATES SCHNELLAUSWAHL -->
+            <div id="player-modal" class="modal-overlay">
+                <div class="modal-container">
+
+                    <div class="modal-header">
+                        <h3>Spieler / Template auswählen</h3>
+                        <button class="modal-close-btn" id="modal-player-close-btn">&times;</button>
+                    </div>
+
+                    <div class="modal-search-wrapper">
+                        <span class="material-icons search-icon">search</span>
+                        <input type="text" id="player-search-input" placeholder="Spieler suchen...">
+                    </div>
+
+                    <div class="modal-body-scroll">
+                        <!-- SEKTION 1: BASE TEMPLATES -->
+                        <div id="section-base-templates" class="team-section">
+                            <div class="section-title">Base Templates</div>
+                            <div class="team-grid">
+                                <div class="team-card player-card pinned" data-name="Standard (base.png)"
+                                    data-src="base.png">
+                                    <img src="base.png" alt="Standard Base">
+                                    <span>Standard Base</span>
+                                </div>
+                                <div class="team-card player-card pinned" data-name="Base 2 (base2.png)"
+                                    data-src="base2.png">
+                                    <img src="base2.png" alt="Base 2">
+                                    <span>Base 2</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SEKTION 2: SPIELER -->
+                        <div class="team-section">
+                            <div class="section-title">Spieler</div>
+                            <div class="team-grid" id="all-players-grid">
+                                <div class="team-card player-card" data-name="Spieler 1"
+                                    data-src="players/spieler1.png">
+                                    <img src="players/spieler1.png" alt="Spieler 1">
+                                    <span>Spieler 1</span>
+                                </div>
+                                <div class="team-card player-card" data-name="Spieler 2"
+                                    data-src="players/spieler2.png">
+                                    <img src="players/spieler2.png" alt="Spieler 2">
+                                    <span>Spieler 2</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- KATEGORIE 2: TEAMS & LOGOS -->
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    <span>2. Teams & Logos</span>
+                    <span class="material-icons icon-toggle">expand_more</span>
+                </button>
+                <div class="accordion-content">
+
+                    <!-- HEIMTEAM -->
+                    <div class="team-input-group">
+                        <label for="input-home-name">Heimteam</label>
+                        <div class="input-with-dropdown">
+                            <input type="text" id="input-home-name" value="MSG IGGELHEIM/MECKENHEIM 2"
+                                placeholder="Teamname eingeben...">
+                            <button type="button" class="btn-quick-select" id="btn-open-modal-home"
+                                title="Schnellauswahl öffnen">
+                                <span class="material-icons">grid_view</span>
+                            </button>
+                        </div>
+
+                        <div class="subtle-upload">
+                            <label for="input-home-logo" class="file-label">
+                                <span class="material-icons">cloud_upload</span>
+                                <span id="label-home-logo">Eigenes Logo hochladen</span>
+                            </label>
+                            <input type="file" id="input-home-logo" accept="image/*" class="hidden-file-input">
+                        </div>
+                    </div>
+
+                    <hr class="separator">
+
+                    <!-- GASTTEAM -->
+                    <div class="team-input-group">
+                        <label for="input-away-name">Gastteam</label>
+                        <div class="input-with-dropdown">
+                            <input type="text" id="input-away-name" value="HSG LANDAU/LAND 2"
+                                placeholder="Teamname eingeben...">
+                            <button type="button" class="btn-quick-select" id="btn-open-modal-away"
+                                title="Schnellauswahl öffnen">
+                                <span class="material-icons">grid_view</span>
+                            </button>
+                        </div>
+
+                        <div class="subtle-upload">
+                            <label for="input-away-logo" class="file-label">
+                                <span class="material-icons">cloud_upload</span>
+                                <span id="label-away-logo">Eigenes Logo hochladen</span>
+                            </label>
+                            <input type="file" id="input-away-logo" accept="image/*" class="hidden-file-input">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- KATEGORIE 3: SPIEL-INFOS & ERGEBNIS -->
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    <span>3. Spiel-Infos & Ergebnis</span>
+                    <span class="material-icons icon-toggle">expand_more</span>
+                </button>
+                <div class="accordion-content">
+
+                    <!-- TOGGLE BUTTON FÜR INFOBAR -->
+                    <div class="form-group toggle-group">
+                        <label for="toggle-infobar">Infobar anzeigen</label>
+                        <label class="switch">
+                            <input type="checkbox" id="toggle-infobar" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <hr class="separator">
+
+                    <!-- DATUM -->
+                    <div class="form-group">
+                        <label for="input-date">Datum</label>
+                        <div class="input-with-picker">
+                            <input type="text" id="input-date" value="06.09.2026" placeholder="z.B. 06.09.2026">
+                            <input type="date" id="hidden-date-picker" class="hidden-picker">
+                            <button type="button" class="btn-picker" id="btn-date-picker" title="Datum auswählen">
+                                <span class="material-icons">calendar_today</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- UHRZEIT -->
+                    <div class="form-group">
+                        <label for="input-time">Anwurfzeit</label>
+                        <div class="input-with-picker">
+                            <input type="text" id="input-time" value="18:00 UHR" placeholder="z.B. 18:00 UHR">
+                            <input type="time" id="hidden-time-picker" class="hidden-picker">
+                            <button type="button" class="btn-picker" id="btn-time-picker" title="Uhrzeit auswählen">
+                                <span class="material-icons">schedule</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- HALLE -->
+                    <div class="form-group">
+                        <label for="input-hall">Halle</label>
+                        <input type="text" id="input-hall" value="Wahagnieshalle">
+                    </div>
+
+                    <hr class="separator">
+
+                    <!-- ERGEBNIS (OPTIONALE EINGABE) -->
+                    <div class="form-group">
+                        <label>Ergebnis (optional)</label>
+                        <div class="score-input-group">
+                            <input type="number" id="input-home-score" placeholder="Heim" min="0">
+                            <span class="score-divider">:</span>
+                            <input type="number" id="input-away-score" placeholder="Gast" min="0">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <button class="btn-download" id="btn-download">Grafik Herunterladen (PNG)</button>
+        </div>
+
+        <!-- VORSCHAU-BEREICH -->
+        <div class="preview-wrapper">
+            <div id="matchday-card">
+                <div class="player-layer">
+                    <img id="display-player-img" src="base.png" alt="Featured Team/Player">
+                </div>
+
+                <div class="bg-overlay"></div>
+
+                <div id="block-title" class="movable-element">
+                    <div class="header-title">
+                        <h1 class="main-matchday" id="display-matchday">MATCHDAY</h1>
+                        <h2 id="display-title">HEIMSPIEL</h2>
+                        <div class="hashtag" id="display-hashtag">#lossemasbrenne</div>
+                    </div>
+                </div>
+
+                <div id="block-teams" class="movable-element">
+                    <div class="team-box">
+                        <div class="logo-frame" id="frame-home-logo">
+                            <img id="display-home-logo" src="logos/luchse.png" alt="Heim Logo">
+                        </div>
+                        <div class="team-name" id="display-home-name">MSG IGGELHEIM/MECKENHEIM 2</div>
+                    </div>
+
+                    <div class="vs-container">
+                        <div class="vs-badge">VS.</div>
+                        <div id="display-score" class="score-badge"></div>
+                    </div>
+
+                    <div class="team-box">
+                        <div class="logo-frame" id="frame-away-logo">
+                            <img id="display-away-logo" src="logos/landau.png" alt="Gast Logo">
+                        </div>
+                        <div class="team-name" id="display-away-name">HSG LANDAU/LAND 2</div>
+                    </div>
+                </div>
+
+                <div id="block-info" class="movable-element">
+                    <div class="info-item">
+                        <div class="info-header">
+                            <span class="material-icons">location_on</span>
+                            <span class="info-label">HALLE</span>
+                        </div>
+                        <span class="info-value" id="display-hall">Wahagnieshalle</span>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-header">
+                            <span class="material-icons">event</span>
+                            <span class="info-label">DATUM</span>
+                        </div>
+                        <span class="info-value" id="display-date">06.09.2026</span>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-header">
+                            <span class="material-icons">schedule</span>
+                            <span class="info-label">ANWURF</span>
+                        </div>
+                        <span class="info-value" id="display-time">18:00 UHR</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL POPUP: TEAM SCHNELLAUSWAHL -->
+    <div id="team-modal" class="modal-overlay">
+        <div class="modal-container">
+
+            <div class="modal-header">
+                <h3>Team auswählen</h3>
+                <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+            </div>
+
+            <div class="modal-search-wrapper">
+                <span class="material-icons search-icon">search</span>
+                <input type="text" id="team-search-input" placeholder="Team suchen...">
+            </div>
+
+            <div class="modal-body-scroll">
+                <!-- SEKTION 1: EIGENE TEAMS -->
+                <div id="section-pinned" class="team-section">
+                    <div class="section-title">Eigene Teams</div>
+                    <div class="team-grid">
+                        <div class="team-card pinned" data-team="MSG Iggelheim/Meckenheim 1" data-logo="luchse.png">
+                            <img src="logos/luchse.png" alt="MSG Iggelheim/Meckenheim 1">
+                            <span>MSG Iggelheim/Meckenheim 1</span>
+                        </div>
+                        <div class="team-card pinned" data-team="MSG Iggelheim/Meckenheim 2" data-logo="luchse.png">
+                            <img src="logos/luchse.png" alt="MSG Iggelheim/Meckenheim 2">
+                            <span>MSG Iggelheim/Meckenheim 2</span>
+                        </div>
+                        <div class="team-card pinned" data-team="MSG Iggelheim/Meckenheim 3" data-logo="luchse.png">
+                            <img src="logos/luchse.png" alt="MSG Iggelheim/Meckenheim 3">
+                            <span>MSG Iggelheim/Meckenheim 3</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEKTION 2: ALLE TEAMS -->
+                <div class="team-section">
+                    <div class="section-title">Alle Teams</div>
+                    <div class="team-grid" id="all-teams-grid">
+                        <div class="team-card" data-team="HSG Landau/Land 2" data-logo="landau.png">
+                            <img src="logos/landau.png" alt="HSG Landau/Land 2">
+                            <span>HSG Landau/Land 2</span>
+                        </div>
+                        <div class="team-card" data-team="HSG Lingenfeld/Schwegenheim" data-logo="lingenfeld.png">
+                            <img src="logos/lingenfeld.png" alt="HSG Lingenfeld/Schwegenheim">
+                            <span>HSG Lingenfeld/Schwegenheim</span>
+                        </div>
+                        <div class="team-card" data-team="MSG Mundenheim/Rheingönheim" data-logo="mundenheim.png">
+                            <img src="logos/mundenheim.png" alt="MSG Mundenheim/Rheingönheim">
+                            <span>MSG Mundenheim/Rheingönheim</span>
+                        </div>
+                        <div class="team-card" data-team="TuS Neuhofen" data-logo="neuhofen.png">
+                            <img src="logos/neuhofen.png" alt="TuS Neuhofen">
+                            <span>TuS Neuhofen</span>
+                        </div>
+                        <div class="team-card" data-team="MSG Niederfeld/Oggersheim" data-logo="niederfeld.png">
+                            <img src="logos/niederfeld.png" alt="MSG Niederfeld/Oggersheim">
+                            <span>MSG Niederfeld/Oggersheim</span>
+                        </div>
+                        <div class="team-card" data-team="Südpfalztiger 3" data-logo="obzk.png">
+                            <img src="logos/obzk.png" alt="Südpfalztiger 3">
+                            <span>Südpfalztiger 3</span>
+                        </div>
+                        <div class="team-card" data-team="TV Offenbach 2" data-logo="offenbach.png">
+                            <img src="logos/offenbach.png" alt="TV Offenbach 2">
+                            <span>TV Offenbach 2</span>
+                        </div>
+                        <div class="team-card" data-team="TS Rodalben" data-logo="rodalben.png">
+                            <img src="logos/rodalben.png" alt="TS Rodalben">
+                            <span>TS Rodalben</span>
+                        </div>
+                        <div class="team-card" data-team="TSV Speyer 2" data-logo="speyer.png">
+                            <img src="logos/speyer.png" alt="TSV Speyer 2">
+                            <span>TSV Speyer 2</span>
+                        </div>
+                        <div class="team-card" data-team="HSG Trifels" data-logo="trifels.png">
+                            <img src="logos/trifels.png" alt="HSG Trifels">
+                            <span>HSG Trifels</span>
+                        </div>
+                        <div class="team-card" data-team="TG Waldsee 2" data-logo="waldsee.png">
+                            <img src="logos/waldsee.png" alt="TG Waldsee 2">
+                            <span>TG Waldsee 2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="created-by">created by Tim / v1.3</div>
+    <a href="https://github.com/timlemmur/matchday-generator" target="_blank" rel="noopener noreferrer"
+        class="github-link" title="GitHub Repository">
+        <svg viewBox="0 0 24 24" class="github-icon">
+            <path fill="currentColor"
+                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+        </svg>
+        <span>GitHub</span>
+    </a>
+
+    <!-- Haupt-Skript als Modul geladen -->
+    <script type="module" src="js/main.js"></script>
+
+</body>
+
+</html>
