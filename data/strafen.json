@@ -77,8 +77,8 @@
     "name": "Melf",
     "grund": "Saisonbeitrag (Standard)",
     "betrag": 100,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "9.9.2026"
   },
   {
     "id": 1788967522095,
