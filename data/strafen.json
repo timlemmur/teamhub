@@ -1,5 +1,14 @@
 [
   {
+    "id": 1788964743157,
+    "datum": "9.9.2026",
+    "name": "Tim",
+    "grund": "Saisonbeitrag (Ermäßigt)",
+    "betrag": 70,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
     "id": 1788964705264,
     "datum": "9.9.2026",
     "name": "Melf",
