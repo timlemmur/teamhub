@@ -1,5 +1,23 @@
 [
   {
+    "id": 1788967788514,
+    "datum": "9.9.2026",
+    "name": "Josh",
+    "grund": "Sachen in der Halle vergessen (max. 10€)",
+    "betrag": 2,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
+    "id": 1788967788251,
+    "datum": "9.9.2026",
+    "name": "Josh",
+    "grund": "Bier verschüttet",
+    "betrag": 5,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
     "id": 1788967761328,
     "datum": "9.9.2026",
     "name": "Chris",
