@@ -1,5 +1,14 @@
 [
   {
+    "id": 1788967812181,
+    "datum": "9.9.2026",
+    "name": "Len",
+    "grund": "Amt vergessen (Fußball, Eisbox, etc.)",
+    "betrag": 3,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
     "id": 1788967788514,
     "datum": "9.9.2026",
     "name": "Josh",
