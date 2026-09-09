@@ -1,5 +1,14 @@
 [
   {
+    "id": 1788967591869,
+    "datum": "9.9.2026",
+    "name": "Jule",
+    "grund": "Saisonbeitrag (Standard)",
+    "betrag": 100,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
     "id": 1788967582949,
     "datum": "9.9.2026",
     "name": "Josh",
