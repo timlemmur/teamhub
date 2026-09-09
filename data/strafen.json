@@ -1,5 +1,14 @@
 [
   {
+    "id": 1788967748522,
+    "datum": "9.9.2026",
+    "name": "Sommer",
+    "grund": "Bier verschüttet",
+    "betrag": 5,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
     "id": 1788967725541,
     "datum": "9.9.2026",
     "name": "Jannis",
