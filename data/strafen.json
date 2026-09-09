@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "id": 1788966787724,
+    "datum": "9.9.2026",
+    "name": "Mannschaftskasse",
+    "grund": "Start der Aufzeichnung (Sep.26)",
+    "betrag": 136.17,
+    "bezahlt": true,
+    "bezahltAm": "9.9.2026",
+    "type": "einnahme"
+  }
+]
