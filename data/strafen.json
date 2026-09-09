@@ -4,8 +4,8 @@
     "datum": "09.09.2026",
     "name": "Max Mustermann",
     "grund": "Zu spät zum Training",
-    "betrag": 5.00,
-    "bezahlt": false,
-    "bezahltAm": null
+    "betrag": 5,
+    "bezahlt": true,
+    "bezahltAm": "9.9.2026"
   }
 ]
