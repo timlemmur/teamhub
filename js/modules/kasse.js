@@ -395,23 +395,22 @@ async function handleAddStrafeSubmit(e) {
 
 export function renderKasseStats() {
     const totalOffenEl = document.getElementById('offene-strafen-val');
-    const totalKassenstandEl = document.getElementById('kassenstand-val');
+    const totalKasseEl = document.getElementById('kassenstand-val');
 
-    // Summe offener Strafen
     const summeOffen = strafenLogbook
-        .filter(s => !s.bezahlt && s.betrag > 0)
-        .reduce((sum, item) => sum + item.betrag, 0);
+        .filter(s => !s.bezahlt && (Number(s.betrag) || 0) > 0)
+        .reduce((sum, item) => sum + (Number(item.betrag) || 0), 0);
 
-    // Gesamter Kassenstand (Bezahlte Strafen + freie Buchungen)
     const summeKasse = strafenLogbook
         .filter(s => s.bezahlt)
-        .reduce((sum, item) => sum + item.betrag, 0);
+        .reduce((sum, item) => sum + (Number(item.betrag) || 0), 0);
 
     if (totalOffenEl) totalOffenEl.textContent = `${summeOffen.toFixed(2).replace('.', ',')} €`;
-    if (totalKassenstandEl) totalKassenstandEl.textContent = `${summeKasse.toFixed(2).replace('.', ',')} €`;
+    if (totalKasseEl) totalKasseEl.textContent = `${summeKasse.toFixed(2).replace('.', ',')} €`;
 
-    // CHART AKTUALISIEREN
-    renderKasseChart(strafenLogbook);
+    if (typeof renderKasseChart === 'function') {
+        renderKasseChart(strafenLogbook);
+    }
 }
 
 export function renderLogbuchModal() {
@@ -426,15 +425,16 @@ export function renderLogbuchModal() {
     }
 
     tbody.innerHTML = strafenLogbook.map(item => {
-        const isExpense = item.betrag < 0;
+        const betragVal = Number(item.betrag) || 0;
+        const isExpense = betragVal < 0;
         const color = isExpense ? '#f87171' : (item.bezahlt ? '#4ade80' : '#f59e0b');
-        const formattedAmount = `${item.betrag > 0 ? '+' : ''}${item.betrag.toFixed(2).replace('.', ',')} €`;
+        const formattedAmount = `${betragVal > 0 ? '+' : ''}${betragVal.toFixed(2).replace('.', ',')} €`;
 
         return `
             <tr>
-                <td style="color: #94a3b8;">${item.datum}</td>
-                <td><strong>${item.name}</strong></td>
-                <td>${item.grund}</td>
+                <td style="color: #94a3b8;">${item.datum || ''}</td>
+                <td><strong>${item.name || 'Unbekannt'}</strong></td>
+                <td>${item.grund || ''}</td>
                 <td>
                     <span class="badge-status ${item.bezahlt ? 'paid' : 'unpaid'}">
                         ${item.bezahlt ? `Bezahlt (${item.bezahltAm || ''})` : 'Offen'}
@@ -459,7 +459,7 @@ export function renderLogbuchModal() {
         `;
     }).join('');
 
-    if (isAdmin) {
+    if (isAdmin && typeof attachAdminListeners === 'function') {
         attachAdminListeners();
     }
 }

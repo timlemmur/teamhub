@@ -91,12 +91,10 @@ export function renderOffeneStrafenModal() {
     const offene = logbook.filter(s => !s.bezahlt);
     const isAdmin = Boolean(getStoredToken());
 
-    // Admin-Container ein-/ausblenden
     if (adminContainer) {
         adminContainer.style.display = isAdmin ? 'block' : 'none';
     }
 
-    // Event-Listener sichern
     if (addBtn && !addBtn.dataset.bound) {
         addBtn.dataset.bound = "true";
         addBtn.addEventListener('click', () => {
@@ -113,21 +111,24 @@ export function renderOffeneStrafenModal() {
         return;
     }
 
-    tbody.innerHTML = offene.map(item => `
-        <tr>
-            <td style="color: #94a3b8;">${item.datum}</td>
-            <td><strong>${item.name}</strong></td>
-            <td>${item.grund}</td>
-            <td style="color: #f59e0b; font-weight: bold; text-align: right;">${item.betrag.toFixed(2).replace('.', ',')} €</td>
-            ${isAdmin ? `
-                <td style="text-align: right;">
-                    <button class="btn-today btn-pay-offen" data-id="${item.id}" style="font-size: 0.75rem; padding: 4px 8px;">
-                        Als bezahlt
-                    </button>
-                </td>
-            ` : ''}
-        </tr>
-    `).join('');
+    tbody.innerHTML = offene.map(item => {
+        const betragVal = Number(item.betrag) || 0;
+        return `
+            <tr>
+                <td style="color: #94a3b8;">${item.datum || ''}</td>
+                <td><strong>${item.name || 'Unbekannt'}</strong></td>
+                <td>${item.grund || ''}</td>
+                <td style="color: #f59e0b; font-weight: bold; text-align: right;">${betragVal.toFixed(2).replace('.', ',')} €</td>
+                ${isAdmin ? `
+                    <td style="text-align: right;">
+                        <button class="btn-today btn-pay-offen" data-id="${item.id}" style="font-size: 0.75rem; padding: 4px 8px;">
+                            Als bezahlt
+                        </button>
+                    </td>
+                ` : ''}
+            </tr>
+        `;
+    }).join('');
 
     if (isAdmin) {
         document.querySelectorAll('.btn-pay-offen').forEach(btn => {
