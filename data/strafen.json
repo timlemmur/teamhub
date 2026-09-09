@@ -5,8 +5,8 @@
     "name": "Tim",
     "grund": "Saisonbeitrag (Ermäßigt)",
     "betrag": 70,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "9.9.2026"
   },
   {
     "id": 1788965852551,
