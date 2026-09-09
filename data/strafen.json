@@ -1,21 +1,11 @@
 [
   {
-    "id": 1788966544203,
+    "id": 1788966723074,
     "datum": "9.9.2026",
     "name": "Tim",
     "grund": "Saisonbeitrag (Ermäßigt)",
     "betrag": 70,
-    "bezahlt": true,
-    "bezahltAm": "9.9.2026"
-  },
-  {
-    "id": 1788965852551,
-    "datum": "9.9.2026",
-    "name": "Mannschaftskasse",
-    "grund": "Start der Aufzeichnung (Sep.26)",
-    "betrag": 136.17,
-    "bezahlt": true,
-    "bezahltAm": "9.9.2026",
-    "type": "einnahme"
-  },
+    "bezahlt": false,
+    "bezahltAm": null
+  }
 ]
