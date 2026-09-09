@@ -1,5 +1,14 @@
 [
   {
+    "id": 1788972931497,
+    "datum": "9.9.2026",
+    "name": "Mateo",
+    "grund": "Strafe",
+    "betrag": 10,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
     "id": 1788972819501,
     "datum": "9.9.2026",
     "name": "Marlon",
