@@ -1,5 +1,14 @@
 [
   {
+    "id": 1788967761328,
+    "datum": "9.9.2026",
+    "name": "Chris",
+    "grund": "Rauchen/Trinken im Trikot",
+    "betrag": 5,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
     "id": 1788967748522,
     "datum": "9.9.2026",
     "name": "Sommer",
