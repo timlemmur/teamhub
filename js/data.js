@@ -7,9 +7,9 @@ export const strafenData = {
     },
     // SPIELERLISTE FÜR DAS DROPDOWN
     spieler: [
-        "Carsten", "Chris", "Fabi", "Harry", "Jannis", "Janton", "Jonathan", 
-        "Josh", "Jule", "Jööl", "Len", "Löwe", "Marlon", "Mateo", 
-        "Melf", "Nils", "Nille", "Patrick", "Perez", "Rene", "Simon", "Sommer", "Tim"
+        "Carsten", "Chris", "Fabi", "Gordon", "Harry", "Jannis", "Janton", "Jonathan", 
+        "Josh", "Jule", "Jööl", "Len", "Löwe", "Marlon", "Mateo", "Melf", "Nils", "Nille",
+        "Patrick", "Perez", "Rene", "Simon", "Sommer", "Tim"
     ],
     aemter: [
         { amt: "Musik", name: "Fabian & Nils" },
