@@ -1,0 +1,115 @@
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(4px);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 650px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+.modal-content.modal-lg {
+    max-width: 850px;
+    width: 92%;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #334155;
+    background: #0f172a;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #f8fafc;
+}
+
+.modal-close {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modal-close:hover { color: #f8fafc; }
+
+.modal-body {
+    padding: 16px 20px;
+    overflow-y: auto;
+}
+
+.strafen-info-box {
+    background: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+    color: #f8fafc;
+}
+
+.strafen-info-box a { color: #38bdf8; }
+
+/* Hilfsklasse zum Ausblenden */
+.hidden {
+    display: none !important;
+}
+
+/* Spezifisch für das Admin Modal, da es standardmäßig .modal-overlay verwendet */
+#admin-modal.active {
+    display: flex;
+}
+
+.error-message {
+    color: #f87171;
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+/* Styling für aktive Buchungsart-Schalter */
+.buchungsart-option.active-einnahme {
+    background: #22c55e !important;
+    color: #0f172a !important;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.4);
+}
+
+.buchungsart-option.active-ausgabe {
+    background: #f87171 !important;
+    color: #0f172a !important;
+    box-shadow: 0 2px 8px rgba(248, 113, 113, 0.4);
+}
+
+.buchungsart-option:hover:not(.active-einnahme):not(.active-ausgabe) {
+    background: rgba(255, 255, 255, 0.05);
+    color: #f8fafc;
+}
