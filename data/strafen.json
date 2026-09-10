@@ -242,5 +242,16 @@
     "bezahlt": true,
     "bezahltAm": "9.9.2026",
     "type": "einnahme"
+  },
+  {
+    "id": 1789080973582,
+    "datum": "11.9.2026",
+    "name": "Tim",
+    "grund": "test",
+    "betrag": 0,
+    "anzahl": 1,
+    "typ": "KASTEN",
+    "bezahlt": false,
+    "bezahltAm": null
   }
 ]
