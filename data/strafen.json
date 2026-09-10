@@ -1,5 +1,14 @@
 [
   {
+    "id": 1789069387854,
+    "datum": "10.9.2026",
+    "name": "Marlon",
+    "grund": "Handy während Training",
+    "betrag": 5,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
     "id": 1788979363675,
     "datum": "9.9.2026",
     "name": "Chris",
