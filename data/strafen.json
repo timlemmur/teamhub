@@ -251,7 +251,7 @@
     "betrag": 0,
     "anzahl": 1,
     "typ": "KASTEN",
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "11.9.2026"
   }
 ]
