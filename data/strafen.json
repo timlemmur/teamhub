@@ -1,5 +1,14 @@
 [
   {
+    "id": 1789069558696,
+    "datum": "10.9.2026",
+    "name": "Fabi",
+    "grund": "Zu spät zum Training (max. 10€) (2x)",
+    "betrag": 2,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
     "id": 1789069387854,
     "datum": "10.9.2026",
     "name": "Marlon",
