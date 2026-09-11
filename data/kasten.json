@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": 1789135904550,
+    "datum": "11.9.2026",
+    "name": "Patrick",
+    "spieler": "Patrick",
+    "grund": "30. Tor (gg. Offenbach)",
+    "anzahl": 1,
+    "typ": "KASTEN"
+  }
+]
