@@ -1,46 +1,55 @@
 import { strafenData } from '../data.js';
 import { getStrafenData, renderLogbuchModal, renderKasseStats } from './kasse.js';
+import { getKaestenData, reduceKastenAnzahl, updateKastenBadge } from './kasten.js';
 import { getStoredToken, saveStrafenToRepo } from '../services/github.js';
 
-export function openModule(moduleName) {
-    if (moduleName === 'strafen') {
-        renderStrafenTable();
-        document.getElementById('strafen-modal')?.classList.add('active');
-    } else if (moduleName === 'aemter') {
-        renderAemterTable();
-        document.getElementById('aemter-modal')?.classList.add('active');
-    } else if (moduleName === 'offeneStrafen') {
-        renderOffeneStrafenModal();
-        document.getElementById('offene-strafen-modal')?.classList.add('active');
-    } else if (moduleName === 'logbuch') {
-        renderLogbuchModal();
-        document.getElementById('logbuch-modal')?.classList.add('active');
-    } else if (moduleName === 'admin') {
-        const adminModal = document.getElementById('admin-modal');
-        if (adminModal) {
-            adminModal.classList.remove('hidden');
-            adminModal.classList.add('active');
-        }
+// 1. HILFSFUNKTIONEN ZUERST DEFINIEREN
+function populateStrafkastenSpielerSelect() {
+    const playerSelect = document.getElementById('strafkasten-spieler');
+    if (playerSelect && strafenData?.spieler) {
+        playerSelect.innerHTML = '<option value="">-- Spieler auswählen --</option>' +
+            strafenData.spieler.map(p => `<option value="${p}">${p}</option>`).join('');
     }
 }
 
+// 2. ZENTRALE MODAL-MAPPING-KONFIGURATION
+const modalConfig = {
+    strafen: { id: 'strafen-modal', render: renderStrafenTable },
+    aemter: { id: 'aemter-modal', render: renderAemterTable },
+    offeneStrafen: { id: 'offene-strafen-modal', render: renderOffeneStrafenModal },
+    offeneKaesten: { id: 'offene-kaesten-modal', render: renderOffeneKaestenModal },
+    logbuch: { id: 'logbuch-modal', render: renderLogbuchModal },
+    admin: { id: 'admin-modal' },
+    buchung: { id: 'buchung-modal' },
+    addStrafe: { id: 'add-strafe-modal' },
+    addStrafkasten: { id: 'add-strafkasten-modal', render: populateStrafkastenSpielerSelect }
+};
+
+// ELEGANTE OPEN-FUNCTION
+export function openModule(moduleName) {
+    const config = modalConfig[moduleName];
+    if (!config) return;
+
+    if (typeof config.render === 'function') {
+        config.render();
+    }
+
+    const modal = document.getElementById(config.id);
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('active');
+    }
+}
+
+// ELEGANTE CLOSE-FUNCTION
 export function closeModule(moduleName) {
-    const modalMap = {
-        strafen: 'strafen-modal',
-        aemter: 'aemter-modal',
-        offeneStrafen: 'offene-strafen-modal',
-        logbuch: 'logbuch-modal',
-        admin: 'admin-modal',
-        buchung: 'buchung-modal'
-    };
-    if (modalMap[moduleName]) {
-        const modalEl = document.getElementById(modalMap[moduleName]);
-        if (modalEl) {
-            modalEl.classList.remove('active');
-            if (moduleName === 'admin' || moduleName === 'buchung') {
-                modalEl.classList.add('hidden');
-            }
-        }
+    const config = modalConfig[moduleName];
+    if (!config) return;
+
+    const modal = document.getElementById(config.id);
+    if (modal) {
+        modal.classList.remove('active');
+        modal.classList.add('hidden');
     }
 }
 
@@ -83,35 +92,43 @@ function renderAemterTable() {
 
 export function renderOffeneStrafenModal() {
     const tbody = document.getElementById('offene-strafen-modal-body');
-    const adminContainer = document.getElementById('admin-strafe-add-container');
-    const addBtn = document.getElementById('btn-open-add-strafe-modal');
+    const playerSelect = document.getElementById('offene-strafen-player-filter');
     if (!tbody) return;
 
     const logbook = getStrafenData();
     const offene = logbook.filter(s => !s.bezahlt);
     const isAdmin = Boolean(getStoredToken());
 
-    if (adminContainer) {
-        adminContainer.style.display = isAdmin ? 'block' : 'none';
+    if (playerSelect) {
+        const selectedValue = playerSelect.value || 'ALL';
+        const uniquePlayers = [...new Set(offene.map(item => item.name || 'Unbekannt'))].sort();
+
+        playerSelect.innerHTML = `<option value="ALL">Alle Spieler anzeigen (${offene.length})</option>` +
+            uniquePlayers.map(p => `<option value="${p}">${p}</option>`).join('');
+
+        playerSelect.value = selectedValue;
+
+        if (!playerSelect.dataset.bound) {
+            playerSelect.dataset.bound = "true";
+            playerSelect.addEventListener('change', () => renderOffeneStrafenModal());
+        }
     }
 
-    if (addBtn && !addBtn.dataset.bound) {
-        addBtn.dataset.bound = "true";
-        addBtn.addEventListener('click', () => {
-            const addModal = document.getElementById('add-strafe-modal');
-            if (addModal) {
-                addModal.classList.remove('hidden');
-                addModal.classList.add('active');
-            }
-        });
-    }
+    const selectedPlayer = playerSelect ? playerSelect.value : 'ALL';
+    const filteredOffene = selectedPlayer === 'ALL' 
+        ? offene 
+        : offene.filter(item => (item.name || 'Unbekannt') === selectedPlayer);
 
-    if (offene.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="${isAdmin ? 5 : 4}" style="text-align: center; color: #4ade80; padding: 20px;">🎉 Keine offenen Strafen vorhanden!</td></tr>`;
+    if (filteredOffene.length === 0) {
+        const msg = selectedPlayer === 'ALL' 
+            ? '🎉 Keine unbezahlten Strafen vorhanden!' 
+            : `Keine unbezahlten Strafen für ${selectedPlayer}.`;
+            
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #4ade80; padding: 20px;">${msg}</td></tr>`;
         return;
     }
 
-    tbody.innerHTML = offene.map(item => {
+    tbody.innerHTML = filteredOffene.map(item => {
         const betragVal = Number(item.betrag) || 0;
         return `
             <tr>
@@ -119,13 +136,13 @@ export function renderOffeneStrafenModal() {
                 <td><strong>${item.name || 'Unbekannt'}</strong></td>
                 <td>${item.grund || ''}</td>
                 <td style="color: #f59e0b; font-weight: bold; text-align: right;">${betragVal.toFixed(2).replace('.', ',')} €</td>
-                ${isAdmin ? `
-                    <td style="text-align: right;">
+                <td style="text-align: right;">
+                    ${isAdmin ? `
                         <button class="btn-today btn-pay-offen" data-id="${item.id}" style="font-size: 0.75rem; padding: 4px 8px;">
                             Als bezahlt
                         </button>
-                    </td>
-                ` : ''}
+                    ` : '<span style="color: #64748b; font-size: 0.8rem;">—</span>'}
+                </td>
             </tr>
         `;
     }).join('');
@@ -133,8 +150,8 @@ export function renderOffeneStrafenModal() {
     if (isAdmin) {
         document.querySelectorAll('.btn-pay-offen').forEach(btn => {
             btn.addEventListener('click', async (e) => {
-                const id = Number(e.target.getAttribute('data-id'));
-                const item = logbook.find(s => s.id === id);
+                const rawId = e.target.getAttribute('data-id');
+                const item = logbook.find(s => String(s.id) === String(rawId));
 
                 if (item) {
                     item.bezahlt = true;
@@ -148,6 +165,80 @@ export function renderOffeneStrafenModal() {
                         renderKasseStats();
                         renderOffeneStrafenModal();
                     }
+                }
+            });
+        });
+    }
+}
+
+export function renderOffeneKaestenModal() {
+    const tbody = document.getElementById('offene-kaesten-modal-body');
+    const playerSelect = document.getElementById('offene-kaesten-player-filter');
+    if (!tbody) return;
+
+    const kaestenList = getKaestenData();
+    const isAdmin = Boolean(getStoredToken());
+
+    updateKastenBadge();
+
+    if (playerSelect) {
+        const selectedValue = playerSelect.value || 'ALL';
+        const uniquePlayers = [...new Set(kaestenList.map(item => item.name || 'Unbekannt'))].sort();
+
+        playerSelect.innerHTML = `<option value="ALL">Alle Spieler anzeigen (${kaestenList.length})</option>` +
+            uniquePlayers.map(p => `<option value="${p}">${p}</option>`).join('');
+
+        playerSelect.value = selectedValue;
+
+        if (!playerSelect.dataset.bound) {
+            playerSelect.dataset.bound = "true";
+            playerSelect.addEventListener('change', () => renderOffeneKaestenModal());
+        }
+    }
+
+    const selectedPlayer = playerSelect ? playerSelect.value : 'ALL';
+    const filteredKaesten = selectedPlayer === 'ALL' 
+        ? kaestenList 
+        : kaestenList.filter(item => (item.name || 'Unbekannt') === selectedPlayer);
+
+    if (filteredKaesten.length === 0) {
+        const msg = selectedPlayer === 'ALL' 
+            ? '🎉 Keine offenen Strafkästen vorhanden!' 
+            : `Keine offenen Strafkästen für ${selectedPlayer}.`;
+            
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #4ade80; padding: 20px;">${msg}</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = filteredKaesten.map(item => {
+        const anzahl = item.anzahl || 1;
+        return `
+            <tr>
+                <td style="color: #94a3b8;">${item.datum || ''}</td>
+                <td><strong>${item.name || 'Unbekannt'}</strong></td>
+                <td>${item.grund || 'Strafkasten'}</td>
+                <td style="color: #f59e0b; font-weight: bold; text-align: right;">${anzahl}x 🍺</td>
+                <td style="text-align: right;">
+                    ${isAdmin ? `
+                        <button class="btn-today btn-reduce-kasten" data-id="${item.id}" title="1 Kasten als mitgebracht markieren" style="font-size: 0.75rem; padding: 4px 8px;">
+                            -1 🍺 Mitgebracht
+                        </button>
+                    ` : '<span style="color: #64748b; font-size: 0.8rem;">—</span>'}
+                </td>
+            </tr>
+        `;
+    }).join('');
+
+    if (isAdmin) {
+        document.querySelectorAll('.btn-reduce-kasten').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const rawId = e.target.getAttribute('data-id');
+                e.target.textContent = "Speichere...";
+                e.target.disabled = true;
+
+                const success = await reduceKastenAnzahl(rawId, 1);
+                if (success) {
+                    renderOffeneKaestenModal();
                 }
             });
         });

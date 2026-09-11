@@ -1,60 +1,69 @@
-import { initKastenCarousel } from './modules/kasten.js';
+import { initKastenModule, addStrafkastenEntry } from './modules/kasten.js';
 import { initKioskCarousel } from './modules/kiosk.js';
 import { initKasseModule, renderLogbuchModal } from './modules/kasse.js';
-import { openModule, closeModule, renderOffeneStrafenModal } from './modules/modal.js';
+import { openModule, closeModule, renderOffeneStrafenModal, renderOffeneKaestenModal } from './modules/modal.js';
 import { getStoredToken, setStoredToken, removeStoredToken, validateToken } from './services/github.js';
+import { strafenData } from './data.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    initKastenCarousel();
+    // 1. Unabhängige Karussells & Module initialisieren
     initKioskCarousel();
-    await initKasseModule();
 
-    // Modals & Navigation
+    // 2. Daten async aus GitHub laden (Fehler fangen, damit das Dashboard nicht blockiert)
+    try {
+        await initKastenModule();
+    } catch (err) {
+        console.error("Fehler beim Initialisieren des Kasten-Moduls:", err);
+    }
+
+    try {
+        await initKasseModule();
+    } catch (err) {
+        console.error("Fehler beim Initialisieren des Kasse-Moduls:", err);
+    }
+
+    // --- EVENT LISTENER ---
+
+    // Navigation & Modals öffnen
     document.getElementById('btn-open-strafen')?.addEventListener('click', () => openModule('strafen'));
     document.getElementById('btn-open-aemter')?.addEventListener('click', () => openModule('aemter'));
     document.getElementById('btn-open-logbuch')?.addEventListener('click', () => openModule('logbuch'));
-    
+
     // Klick auf Kachel "Offene Strafen"
     document.getElementById('btn-open-offen')?.addEventListener('click', (e) => {
-        // Falls auf das Zahnrad geklickt wurde, nicht das normale Offene-Strafen-Modal öffnen
         if (e.target.closest('#btn-admin-manage-strafen')) return;
         openModule('offeneStrafen');
     });
 
-    // Klick auf Zahnrad -> Strafen-Eintragen-Modal öffnen
-    const gearBtn = document.getElementById('btn-admin-manage-strafen');
-    if (gearBtn) {
-        gearBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            const addModal = document.getElementById('add-strafe-modal');
-            if (addModal) {
-                addModal.classList.remove('hidden');
-                addModal.classList.add('active');
-            }
-        });
-    }
+    // Klick auf Kachel "Offene Strafkästen"
+    document.getElementById('btn-open-offene-kaesten')?.addEventListener('click', (e) => {
+        if (e.target.closest('#btn-admin-manage-kaesten')) return;
+        openModule('offeneKaesten');
+    });
 
-    // Klick auf Grünes Plus (Kassenstand) -> Freie Buchung Modal öffnen
-    const buchungBtn = document.getElementById('btn-admin-manage-buchung');
-    if (buchungBtn) {
-        buchungBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            const buchungModal = document.getElementById('buchung-modal');
-            if (buchungModal) {
-                buchungModal.classList.remove('hidden');
-                buchungModal.classList.add('active');
-            }
-        });
-    }
+    // Admin Plus-Button auf der Kasten-Kachel
+    document.getElementById('btn-admin-manage-kaesten')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        populateStrafkastenSpielerSelect();
+        openModule('addStrafkasten');
+    });
 
-    // Erst NACHDEM die Listener registriert sind, den Admin-Status prüfen & anzeigen
-    checkAdminState();
+    // Admin Plus-Button (Strafen-Eintragen)
+    document.getElementById('btn-admin-manage-strafen')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        openModule('addStrafe');
+    });
 
-    // Admin Login / Logout
-    const adminBtn = document.getElementById('btn-admin-login');
-    adminBtn?.addEventListener('click', () => {
+    // Admin Zahnrad-Button (Freie Buchung)
+    document.getElementById('btn-admin-manage-buchung')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        openModule('buchung');
+    });
+
+    // Admin Login / Logout Toggle
+    document.getElementById('btn-admin-login')?.addEventListener('click', () => {
         if (getStoredToken()) {
             if (confirm("Möchtest du dich abmelden? Der Token wird aus dem Browser gelöscht.")) {
                 logoutAdmin();
@@ -67,30 +76,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Modals schließen
     document.querySelectorAll('.modal-close').forEach(button => {
         button.addEventListener('click', (e) => {
-            const closeTarget = e.target.getAttribute('data-close');
-            if (closeTarget === 'addStrafe') {
-                const modal = document.getElementById('add-strafe-modal');
-                if (modal) {
-                    modal.classList.remove('active');
-                    modal.classList.add('hidden');
-                }
-            } else if (closeTarget === 'buchung') {
-                const modal = document.getElementById('buchung-modal');
-                if (modal) {
-                    modal.classList.remove('active');
-                    modal.classList.add('hidden');
-                }
-            } else {
-                const target = closeTarget || (e.target.id === 'btn-close-modal' ? 'admin' : null);
-                if (target) {
-                    closeModule(target);
-                    if (target === 'admin') resetLoginForm();
-                }
+            const closeTarget = e.target.getAttribute('data-close') || (e.target.id === 'btn-close-modal' ? 'admin' : null);
+            if (closeTarget) {
+                closeModule(closeTarget);
+                if (closeTarget === 'admin') resetLoginForm();
             }
         });
     });
 
-    // Login Form
+    // Login Formular Submit
     const loginForm = document.getElementById('admin-login-form');
     loginForm?.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -98,7 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const errorMsg = document.getElementById('login-error-msg');
         const submitBtn = loginForm.querySelector('button[type="submit"]');
 
-        const inputToken = tokenInput.value.trim();
+        const inputToken = tokenInput?.value.trim();
         if (!inputToken) return;
 
         if (submitBtn) {
@@ -113,6 +107,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             checkAdminState();
             renderLogbuchModal();
             renderOffeneStrafenModal();
+            renderOffeneKaestenModal();
             closeModule('admin');
             resetLoginForm();
             alert("Erfolgreich als Admin angemeldet!");
@@ -131,26 +126,74 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+// Formular-Submit: Neuen Kasten / Kabinenfest speichern
+    document.getElementById('form-add-strafkasten')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Wert des ausgewählten Radio-Buttons ("KASTEN" oder "KABINENFEST") holen
+        const typ = document.querySelector('input[name="strafkastenArt"]:checked')?.value || 'KASTEN';
+        const spieler = document.getElementById('strafkasten-spieler')?.value;
+        const grund = document.getElementById('strafkasten-grund')?.value;
+        const anzahl = parseInt(document.getElementById('strafkasten-anzahl')?.value, 10) || 1;
+
+        if (!spieler || !grund) return;
+
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.textContent = 'Speichere...';
+            submitBtn.disabled = true;
+        }
+
+        const success = await addStrafkastenEntry(spieler, grund, anzahl, typ);
+        if (success) {
+            closeModule('addStrafkasten');
+            e.target.reset();
+
+            // Toggle wieder auf Standard "Kasten" zurücksetzen
+            const defaultRadio = document.querySelector('input[name="strafkastenArt"][value="KASTEN"]');
+            if (defaultRadio) {
+                defaultRadio.checked = true;
+                defaultRadio.dispatchEvent(new Event('change'));
+            }
+
+            renderOffeneKaestenModal();
+        }
+
+        if (submitBtn) {
+            submitBtn.textContent = 'Eintragen & Speichern';
+            submitBtn.disabled = false;
+        }
+    });
+
     document.getElementById('btn-start-generator')?.addEventListener('click', () => {
         window.location.href = './matchday-generator/index.html';
     });
+
+    // Admin UI-Status prüfen
+    checkAdminState();
 });
 
+// Befüllt die Spieler-Auswahl im Kasten-Modal
+function populateStrafkastenSpielerSelect() {
+    const playerSelect = document.getElementById('strafkasten-spieler');
+    if (playerSelect && strafenData?.spieler) {
+        playerSelect.innerHTML = '<option value="">-- Spieler auswählen --</option>' +
+            strafenData.spieler.map(p => `<option value="${p}">${p}</option>`).join('');
+    }
+}
+
+// Steuert Sichtbarkeit der Admin-Buttons
 export function checkAdminState() {
     const isAdmin = Boolean(getStoredToken());
     const adminBtn = document.getElementById('btn-admin-login');
     const gearBtn = document.getElementById('btn-admin-manage-strafen');
     const buchungBtn = document.getElementById('btn-admin-manage-buchung');
+    const kaestenBtn = document.getElementById('btn-admin-manage-kaesten');
 
-    // Admin-Buttons anzeigen / ausblenden
-    if (gearBtn) {
-        gearBtn.style.setProperty('display', isAdmin ? 'flex' : 'none', 'important');
-    }
-    if (buchungBtn) {
-        buchungBtn.style.setProperty('display', isAdmin ? 'flex' : 'none', 'important');
-    }
+    if (gearBtn) gearBtn.style.setProperty('display', isAdmin ? 'flex' : 'none', 'important');
+    if (buchungBtn) buchungBtn.style.setProperty('display', isAdmin ? 'flex' : 'none', 'important');
+    if (kaestenBtn) kaestenBtn.style.setProperty('display', isAdmin ? 'flex' : 'none', 'important');
 
-    // Login/Logout Button steuern
     if (adminBtn) {
         if (isAdmin) {
             adminBtn.textContent = '🔓 Admin Logout';
@@ -167,6 +210,7 @@ function logoutAdmin() {
     checkAdminState();
     renderLogbuchModal();
     renderOffeneStrafenModal();
+    renderOffeneKaestenModal();
 }
 
 function resetLoginForm() {

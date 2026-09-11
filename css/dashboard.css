@@ -96,6 +96,34 @@
     transform: translateY(-1px);
 }
 
+.btn-admin-action {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 6px 8px;
+    color: #38bdf8;
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-admin-action:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.btn-admin-action.gear-icon {
+    color: #f8fafc;
+}
+
 /* QUICK LINKS */
 .quick-links-grid {
     display: flex;
@@ -173,4 +201,27 @@
 
 .matchday-card:hover .matchday-preview-img {
     transform: scale(1.08);
+}
+
+/* Kompaktere Höhe für die Stat-Boxen */
+.kasse-stat-box {
+    padding: 8px 45px 8px 12px !important; /* Verringertes Padding oben/unten */
+    min-height: unset !important;
+}
+
+.kasse-stat-box .stat-label {
+    font-size: 0.75rem !important;
+    margin-bottom: 2px !important;
+}
+
+.kasse-stat-box .stat-value {
+    font-size: 1.25rem !important;
+    line-height: 1.1 !important;
+}
+
+/* Platzierung des Admin-Buttons anpassen */
+.kasse-stat-box .btn-admin-action {
+    right: 8px !important;
+    padding: 4px 6px !important;
+    font-size: 0.95rem !important;
 }

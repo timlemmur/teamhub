@@ -9,7 +9,7 @@ export const strafenData = {
     spieler: [
         "Carsten", "Chris", "Fabi", "Gordon", "Harry", "Jannis", "Janton", "Jonathan", 
         "Josh", "Jule", "Jööl", "Len", "Löwe", "Marlon", "Mateo", "Melf", "Nils", "Nille",
-        "Patrick", "Perez", "Rene", "Simon", "Sommer", "Tim"
+        "Patrick", "Perez", "Rene", "Richie", "Simon", "Sommer", "Tim"
     ],
     aemter: [
         { amt: "Musik", name: "Fabian & Nils" },

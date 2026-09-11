@@ -1,6 +1,6 @@
 import { fetchStrafenFromRepo, saveStrafenToRepo, getStoredToken } from '../services/github.js';
 import { strafenData } from '../data.js';
-import { renderOffeneStrafenModal } from './modal.js';
+import { renderOffeneStrafenModal, closeModule } from './modal.js';
 import { renderKasseChart } from './chart.js';
 
 let strafenLogbook = [];
@@ -24,30 +24,33 @@ export async function initKasseModule() {
     setupFreieBuchungModal();
 }
 
-// Handler for custom Income/Expense bookings
+export function getStrafenData() {
+    return strafenLogbook;
+}
+
+// Handler für individuelle Einnahmen / Ausgaben
 function setupFreieBuchungModal() {
     const form = document.getElementById('buchung-form');
     const labelEinnahme = document.getElementById('label-einnahme');
     const labelAusgabe = document.getElementById('label-ausgabe');
     const radios = document.querySelectorAll('input[name="buchungsart"]');
 
-    // Umschalt-Logik für visuelles Feedback
     radios.forEach(radio => {
         radio.addEventListener('change', () => {
             if (radio.value === 'einnahme') {
                 labelEinnahme?.classList.add('active-einnahme');
                 labelEinnahme?.classList.remove('active-ausgabe');
-                labelEinnahme.style.color = '#0f172a';
+                if (labelEinnahme) labelEinnahme.style.color = '#0f172a';
 
                 labelAusgabe?.classList.remove('active-ausgabe', 'active-einnahme');
-                labelAusgabe.style.color = '#94a3b8';
+                if (labelAusgabe) labelAusgabe.style.color = '#94a3b8';
             } else {
                 labelAusgabe?.classList.add('active-ausgabe');
                 labelAusgabe?.classList.remove('active-einnahme');
-                labelAusgabe.style.color = '#0f172a';
+                if (labelAusgabe) labelAusgabe.style.color = '#0f172a';
 
                 labelEinnahme?.classList.remove('active-einnahme', 'active-ausgabe');
-                labelEinnahme.style.color = '#94a3b8';
+                if (labelEinnahme) labelEinnahme.style.color = '#94a3b8';
             }
         });
     });
@@ -76,19 +79,21 @@ async function handleFreieBuchungSubmit(e) {
     }
 
     if (art === 'ausgabe') {
-        betrag = -betrag; // Negative amount for expenses
+        betrag = -betrag;
     }
 
+    const previousState = JSON.parse(JSON.stringify(strafenLogbook));
     const heute = new Date().toLocaleDateString('de-DE');
+    
     const newEntry = {
-        id: Date.now() + Math.floor(Math.random() * 1000),
+        id: Date.now() + Math.floor(Math.random() * 10000),
         datum: heute,
-        name: "Mannschaftskasse", // General category name
+        name: "Mannschaftskasse",
         grund: grundText,
         betrag: betrag,
-        bezahlt: true, // Auto-settled
+        bezahlt: true,
         bezahltAm: heute,
-        type: art // "einnahme" or "ausgabe"
+        type: art
     };
 
     strafenLogbook.unshift(newEntry);
@@ -103,28 +108,20 @@ async function handleFreieBuchungSubmit(e) {
 
     if (success) {
         alert(`Erfolgreich gebucht: ${art === 'einnahme' ? '+' : ''}${betrag.toFixed(2).replace('.', ',')} € (${grundText})`);
-
         e.target.reset();
         renderKasseStats();
         renderLogbuchModal();
-
-        const buchungModal = document.getElementById('buchung-modal');
-        if (buchungModal) {
-            buchungModal.classList.remove('active');
-            buchungModal.classList.add('hidden');
-        }
+        closeModule('buchung');
     } else {
-        strafenLogbook.shift();
+        strafenLogbook = previousState;
+        renderKasseStats();
+        renderLogbuchModal();
     }
 
     if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Buchung jetzt speichern';
     }
-}
-
-export function getStrafenData() {
-    return strafenLogbook;
 }
 
 function setupAddStrafeModal() {
@@ -138,22 +135,18 @@ function setupAddStrafeModal() {
             strafenData.spieler.map(s => `<option value="${s}">${s}</option>`).join('');
     }
 
-    // Rendert die Strafen sortiert nach Kategorie
     function renderKatalogList(filterTerm = '') {
         if (!katalogContainer || !strafenData?.strafen) return;
 
-        // Speicher bisherige Zählerstände
         const currentCounts = {};
         document.querySelectorAll('.counter-value').forEach(el => {
             const key = el.getAttribute('data-key');
             if (key) currentCounts[key] = parseInt(el.textContent, 10) || 0;
         });
 
-        // 1. Nur monetäre Strafen filtern
         const monetäre = strafenData.strafen.filter(s => s.strafe.includes('€'));
-
-        // 2. Aufsplitten bei Spezialfall "Saisonbeitrag"
         const aufgearbeiteteStrafen = [];
+
         monetäre.forEach(s => {
             if (s.text.toLowerCase().includes('saisonbeitrag')) {
                 aufgearbeiteteStrafen.push({
@@ -182,7 +175,6 @@ function setupAddStrafeModal() {
             }
         });
 
-        // 3. Suche anwenden
         const term = filterTerm.toLowerCase().trim();
         const gefiltert = aufgearbeiteteStrafen.filter(s =>
             s.text.toLowerCase().includes(term) ||
@@ -195,7 +187,6 @@ function setupAddStrafeModal() {
             return;
         }
 
-        // 4. Nach Kategorien gruppieren
         const kategorien = ['Allgemein', 'Training', 'Spiel'];
         const katIcons = { 'Allgemein': '📌', 'Training': '🏃', 'Spiel': '🤾' };
         let html = '';
@@ -230,7 +221,6 @@ function setupAddStrafeModal() {
 
         katalogContainer.innerHTML = html;
 
-        // Button Listener erneut binden
         katalogContainer.querySelectorAll('.btn-counter-add').forEach(btn => {
             btn.addEventListener('click', () => {
                 const key = btn.getAttribute('data-key');
@@ -257,7 +247,6 @@ function setupAddStrafeModal() {
         });
     }
 
-    // Event Listener für die Suche
     if (searchInput) {
         searchInput.value = '';
         searchInput.addEventListener('input', (e) => {
@@ -265,10 +254,7 @@ function setupAddStrafeModal() {
         });
     }
 
-    // Initiales Rendering
     renderKatalogList();
-
-    // Live-Update bei Freitext-Eingabe
     document.getElementById('custom-strafe-betrag')?.addEventListener('input', updateStrafeTotalPreview);
 
     if (form) {
@@ -316,19 +302,16 @@ async function handleAddStrafeSubmit(e) {
     const entriesToAdd = [];
     const heute = new Date().toLocaleDateString('de-DE');
 
-    // Katalog-Einträge verarbeiten
     document.querySelectorAll('.counter-value').forEach(el => {
         const anz = parseInt(el.textContent, 10) || 0;
         if (anz > 0) {
             const grundText = el.getAttribute('data-text');
             const einzelbetrag = parseFloat(el.getAttribute('data-einzelbetrag')) || 0;
             const gesamt = anz * einzelbetrag;
-
-            // Beschriftung anpassen bei Mehrfachzählung (z.B. "Zu spät (5x / Min)")
             const grund = anz > 1 ? `${grundText} (${anz}x)` : grundText;
 
             entriesToAdd.push({
-                id: Date.now() + Math.floor(Math.random() * 1000),
+                id: Date.now() + Math.floor(Math.random() * 10000),
                 datum: heute,
                 name: spieler,
                 grund: grund,
@@ -339,13 +322,12 @@ async function handleAddStrafeSubmit(e) {
         }
     });
 
-    // Indivduelle Strafe verarbeiten
     const customText = document.getElementById('custom-strafe-text')?.value.trim();
     const customBetrag = parseFloat(document.getElementById('custom-strafe-betrag')?.value);
 
     if (customText && !isNaN(customBetrag) && customBetrag > 0) {
         entriesToAdd.push({
-            id: Date.now() + Math.floor(Math.random() * 1000),
+            id: Date.now() + Math.floor(Math.random() * 10000),
             datum: heute,
             name: spieler,
             grund: customText,
@@ -360,6 +342,7 @@ async function handleAddStrafeSubmit(e) {
         return;
     }
 
+    const previousState = JSON.parse(JSON.stringify(strafenLogbook));
     strafenLogbook.unshift(...entriesToAdd);
 
     const submitBtn = document.getElementById('btn-submit-strafe');
@@ -380,11 +363,11 @@ async function handleAddStrafeSubmit(e) {
         renderKasseStats();
         renderLogbuchModal();
         renderOffeneStrafenModal();
-
-        document.getElementById('add-strafe-modal')?.classList.remove('active');
-        document.getElementById('add-strafe-modal')?.classList.add('hidden');
+        closeModule('addStrafe');
     } else {
-        strafenLogbook.splice(0, entriesToAdd.length);
+        strafenLogbook = previousState;
+        renderKasseStats();
+        renderLogbuchModal();
     }
 
     if (submitBtn) {
@@ -459,7 +442,7 @@ export function renderLogbuchModal() {
         `;
     }).join('');
 
-    if (isAdmin && typeof attachAdminListeners === 'function') {
+    if (isAdmin) {
         attachAdminListeners();
     }
 }
@@ -468,12 +451,10 @@ function attachAdminListeners() {
     document.querySelectorAll('.btn-toggle-pay').forEach(btn => {
         btn.addEventListener('click', async (e) => {
             const rawId = e.target.getAttribute('data-id');
-            const id = Number(rawId);
-
-            // Eintrag per ID finden, oder den ersten fehlerhaften Eintrag, falls ID undefined ist
-            const item = strafenLogbook.find(s => String(s.id) === String(rawId) || (!s.id && rawId === "undefined"));
+            const item = strafenLogbook.find(s => String(s.id) === String(rawId));
 
             if (item) {
+                const previousState = item.bezahlt;
                 item.bezahlt = !item.bezahlt;
                 item.bezahltAm = item.bezahlt ? new Date().toLocaleDateString('de-DE') : null;
 
@@ -486,7 +467,7 @@ function attachAdminListeners() {
                     renderLogbuchModal();
                     renderOffeneStrafenModal();
                 } else {
-                    item.bezahlt = !item.bezahlt;
+                    item.bezahlt = previousState;
                     renderLogbuchModal();
                 }
             }
@@ -498,8 +479,8 @@ function attachAdminListeners() {
             if (!confirm('Möchtest du diesen Eintrag wirklich unwiderruflich löschen?')) return;
 
             const rawId = e.target.getAttribute('data-id');
+            const previousLogbook = JSON.parse(JSON.stringify(strafenLogbook));
 
-            // Robustes Filtern: Löscht den Eintrag mit passender ID oder den unvollständigen "Ghost"-Eintrag
             strafenLogbook = strafenLogbook.filter(s => {
                 if (!s.id || String(s.id) === "undefined" || String(s.id) === "null") {
                     return rawId !== "undefined" && rawId !== "null" && rawId !== "";
@@ -513,7 +494,7 @@ function attachAdminListeners() {
                 renderLogbuchModal();
                 renderOffeneStrafenModal();
             } else {
-                strafenLogbook = await fetchStrafenFromRepo();
+                strafenLogbook = previousLogbook;
                 renderLogbuchModal();
             }
         });

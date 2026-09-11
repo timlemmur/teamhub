@@ -93,30 +93,6 @@ body {
     margin-top: 4px;
 }
 
-/* GITHUB LINK */
-.github-link {
-    position: fixed;
-    bottom: 12px;
-    left: 16px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.5);
-    text-decoration: none;
-    z-index: 9999;
-}
-
-.github-link:hover {
-    color: #38bdf8;
-}
-
-.github-icon {
-    width: 16px !important;
-    height: 16px !important;
-    max-width: 16px;
-    max-height: 16px;
-}
 
 /* Standardmäßig ausblenden */
 .admin-only {

@@ -46,9 +46,10 @@
         <section class="card highlight-card">
             <div class="card-header">
                 <span class="icon">🍺</span>
-                <h2>Nächster Kasten:</h2>
+                <h2>Nächster Kasten</h2>
             </div>
             <div class="card-body">
+                <!-- Toolbar: Heute Button & Spieler-Filter -->
                 <div class="carousel-toolbar">
                     <button class="btn-today" id="kasten-today-btn" title="Auf heute zurückspringen">📍 Heute</button>
                     <select class="person-select" id="kasten-person-filter">
@@ -56,14 +57,29 @@
                     </select>
                 </div>
 
+                <!-- Rotations-Karussell -->
                 <div class="carousel-container">
                     <button class="carousel-nav prev" id="kasten-prev-btn" aria-label="Vorheriger">▲</button>
-
                     <div class="carousel-viewport">
                         <div class="carousel-track" id="kasten-carousel-track"></div>
                     </div>
+                    <button class="carousel-nav next" id="kasten-next-btn" aria-label="Nächstes">▼</button>
+                </div>
 
-                    <button class="carousel-nav next" id="kasten-next-btn" aria-label="Nächster">▼</button>
+                <!-- Grid für Stat-Boxen -->
+                <div class="kasse-stats-grid" style="margin-top: 10px; margin-bottom: 10px;">
+                    <div class="kasse-stat-box clickable" id="btn-open-offene-kaesten"
+                        title="Klicken für offene Strafkästen"
+                        style="position: relative; padding-right: 45px; grid-column: 1 / -1;">
+                        <span class="stat-label">Offene Strafkästen & Kabinenfeste</span>
+                        <span class="stat-value warning" id="offene-kaesten-count-badge">0</span>
+
+                        <!-- Admin Plus-Button -->
+                        <button id="btn-admin-manage-kaesten" class="admin-only btn-admin-action"
+                            title="Strafkasten eintragen">
+                            ➕
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -76,55 +92,28 @@
             </div>
             <div class="card-body">
                 <div class="kasse-stats-grid">
-                    <!-- Kassenstand: Freie Buchungen verwalten mit Zahnrad-Button -->
+                    <!-- Kassenstand: Freie Buchungen verwalten -->
                     <div class="kasse-stat-box clickable" id="btn-open-logbuch" title="Klicken für Strafenlogbuch"
                         style="position: relative; padding-right: 45px;">
                         <span class="stat-label">Kassenstand</span>
                         <span class="stat-value primary" id="kassenstand-val">0,00 €</span>
 
-                        <!-- Admin Zahnrad-Button für allgemeine Buchungen -->
-                        <button id="btn-admin-manage-buchung" class="admin-only" title="Freie Buchung eintragen (+ / -)"
-                            style="
-            display: none;
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            padding: 6px 8px;
-            color: #f8fafc;
-            cursor: pointer;
-            font-size: 1.1rem;
-            line-height: 1;
-            transition: all 0.2s ease;">
+                        <!-- Admin Zahnrad-Button -->
+                        <button id="btn-admin-manage-buchung" class="admin-only btn-admin-action gear-icon"
+                            title="Freie Buchung eintragen (+ / -)">
                             ⚙️
                         </button>
                     </div>
 
-                    <!-- Offene Strafen: Neue Strafe eintragen mit Plus-Button -->
+                    <!-- Offene Strafen: Neue Strafe eintragen -->
                     <div class="kasse-stat-box clickable" id="btn-open-offen" title="Klicken für offene Strafen"
                         style="position: relative; padding-right: 45px;">
                         <span class="stat-label">Offene Strafen</span>
                         <span class="stat-value warning" id="offene-strafen-val">0,00 €</span>
 
-                        <!-- Admin Plus-Button für neue Strafen -->
-                        <button id="btn-admin-manage-strafen" class="admin-only" title="Neue Strafe eintragen" style="
-            display: none;
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            padding: 6px 8px;
-            color: #38bdf8;
-            cursor: pointer;
-            font-size: 1.1rem;
-            line-height: 1;
-            transition: all 0.2s ease;">
+                        <!-- Admin Plus-Button -->
+                        <button id="btn-admin-manage-strafen" class="admin-only btn-admin-action"
+                            title="Neue Strafe eintragen">
                             ➕
                         </button>
                     </div>
@@ -145,7 +134,7 @@
         <section class="card highlight-card">
             <div class="card-header">
                 <span class="icon">🍕</span>
-                <h2>Kiosk- & Dienstplan</h2>
+                <h2>Kioskdienst-Plan</h2>
             </div>
             <div class="card-body">
                 <div class="kiosk-carousel">
@@ -154,7 +143,6 @@
                     </div>
                 </div>
 
-                <!-- Navigation & Dots zusammen unter der Box -->
                 <div class="kiosk-footer-nav">
                     <button class="kiosk-nav prev" id="kiosk-prev-btn" aria-label="Vorheriges Spiel">❮</button>
                     <div class="kiosk-dots" id="kiosk-dots"></div>
@@ -223,16 +211,6 @@
         </section>
 
     </main>
-
-    <!-- FOOTER -->
-    <a href="https://github.com/timlemmur/matchday-generator" target="_blank" rel="noopener noreferrer"
-        class="github-link" title="GitHub Repository">
-        <svg viewBox="0 0 24 24" class="github-icon">
-            <path fill="currentColor"
-                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-        </svg>
-        <span>GitHub</span>
-    </a>
 
     <!-- MODALS -->
     <div id="strafen-modal" class="modal-overlay">
@@ -310,6 +288,7 @@
         </div>
     </div>
 
+    <!-- UNBEZAHLTE STRAFEN MODAL -->
     <div id="offene-strafen-modal" class="modal-overlay">
         <div class="modal-content modal-lg">
             <div class="modal-header">
@@ -317,6 +296,16 @@
                 <button class="modal-close" data-close="offeneStrafen">&times;</button>
             </div>
             <div class="modal-body">
+                <div class="filter-toolbar" style="margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+                    <label for="offene-strafen-player-filter"
+                        style="font-size: 0.85rem; color: #94a3b8; font-weight: 600;">
+                        Spieler filtern:
+                    </label>
+                    <select id="offene-strafen-player-filter" class="person-select" style="flex: 1;">
+                        <option value="ALL">Alle Spieler anzeigen</option>
+                    </select>
+                </div>
+
                 <div class="table-container">
                     <table class="strafen-table">
                         <thead>
@@ -325,11 +314,117 @@
                                 <th>Spieler</th>
                                 <th>Vergehen</th>
                                 <th style="text-align: right;">Betrag</th>
+                                <th style="text-align: right;">Aktion</th>
                             </tr>
                         </thead>
                         <tbody id="offene-strafen-modal-body"></tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UNBEZAHLTE/OFFENE STRAFKÄSTEN & KABINENFESTE MODAL -->
+    <div id="offene-kaesten-modal" class="modal-overlay">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>🍺 Offene Strafkästen & Kabinenfeste</h2>
+                <button class="modal-close" data-close="offeneKaesten">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="filter-toolbar" style="margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+                    <label for="offene-kaesten-player-filter"
+                        style="font-size: 0.85rem; color: #94a3b8; font-weight: 600;">
+                        Spieler filtern:
+                    </label>
+                    <select id="offene-kaesten-player-filter" class="person-select" style="flex: 1;">
+                        <option value="ALL">Alle Spieler anzeigen</option>
+                    </select>
+                </div>
+
+                <div class="table-container">
+                    <table class="strafen-table">
+                        <thead>
+                            <tr>
+                                <th>Datum</th>
+                                <th>Spieler</th>
+                                <th>Grund / Vergehen</th>
+                                <th style="text-align: right;">Typ / Anzahl</th>
+                                <th style="text-align: right;">Aktion</th>
+                            </tr>
+                        </thead>
+                        <tbody id="offene-kaesten-modal-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STRAFKASTEN / KABINENFEST EINTRAGEN MODAL (ADMIN) -->
+    <div id="add-strafkasten-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🍺 / 🎉 Eintragen</h2>
+                <button class="modal-close" data-close="addStrafkasten">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-add-strafkasten">
+                    <!-- Art (Segmented Control / Toggle Buttons) -->
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label
+                            style="display: block; margin-bottom: 8px; color: #94a3b8; font-size: 0.85rem; font-weight: 600;">
+                            Art der Strafe *
+                        </label>
+                        <div class="buchungsart-toggle-container"
+                            style="display: flex; background: #0f172a; padding: 4px; border-radius: 8px; border: 1px solid #334155; gap: 4px;">
+
+                            <label class="buchungsart-option active-einnahme" id="label-strafkasten-kasten"
+                                style="flex: 1; padding: 10px; border-radius: 6px; cursor: pointer; text-align: center; font-weight: bold; font-size: 0.9rem; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px; color: #0f172a; user-select: none;">
+                                <input type="radio" name="strafkastenArt" value="KASTEN" checked style="display: none;">
+                                🍺 Strafkasten
+                            </label>
+
+                            <label class="buchungsart-option" id="label-strafkasten-fest"
+                                style="flex: 1; padding: 10px; border-radius: 6px; cursor: pointer; text-align: center; font-weight: bold; font-size: 0.9rem; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px; color: #94a3b8; user-select: none;">
+                                <input type="radio" name="strafkastenArt" value="KABINENFEST" style="display: none;">
+                                🎉 Kabinenfest
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Spieler Auswahl -->
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label
+                            style="display: block; margin-bottom: 6px; color: #94a3b8; font-size: 0.85rem; font-weight: 600;">Spieler
+                            *</label>
+                        <select id="strafkasten-spieler" class="person-select"
+                            style="width: 100%; box-sizing: border-box;" required>
+                            <option value="">-- Spieler auswählen --</option>
+                        </select>
+                    </div>
+
+                    <!-- Grund -->
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label
+                            style="display: block; margin-bottom: 6px; color: #94a3b8; font-size: 0.85rem; font-weight: 600;">Grund
+                            / Anlass *</label>
+                        <input type="text" id="strafkasten-grund" class="person-select"
+                            placeholder="z. B. Geburtstag"
+                            style="width: 100%; box-sizing: border-box;" required>
+                    </div>
+
+                    <!-- Anzahl -->
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label
+                            style="display: block; margin-bottom: 6px; color: #94a3b8; font-size: 0.85rem; font-weight: 600;">Anzahl
+                            *</label>
+                        <input type="number" id="strafkasten-anzahl" class="person-select" value="1" min="1" step="1"
+                            style="width: 100%; box-sizing: border-box;" required>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="width: 100%; background: #22c55e;">Eintragen &
+                        Speichern</button>
+                </form>
             </div>
         </div>
     </div>
@@ -364,41 +459,6 @@
         </div>
     </div>
 
-    <!-- UNBEZAHLTE / OFFENE STRAFEN MODAL -->
-    <div id="offene-strafen-modal" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 650px;">
-            <div class="modal-header">
-                <h2>⚠️ Unbezahlte Strafen</h2>
-                <button class="modal-close" data-close="offeneStrafen">&times;</button>
-            </div>
-
-            <div class="modal-body" style="padding: 15px;">
-                <!-- Button für Admins direkt oben im Body -->
-                <div id="admin-strafe-add-container" style="margin-bottom: 15px; display: none;">
-                    <button id="btn-open-add-strafe-modal" class="btn-primary"
-                        style="background: #22c55e; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;">
-                        ➕ Neue Strafe eintragen
-                    </button>
-                </div>
-
-                <table class="strafen-table" style="width: 100%;">
-                    <thead>
-                        <tr>
-                            <th>Datum</th>
-                            <th>Spieler</th>
-                            <th>Vergehen</th>
-                            <th style="text-align: right;">Betrag</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="offene-strafen-modal-body">
-                        <!-- Dynamischer Inhalt -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
     <!-- ADD STRAFE MODAL (ADMIN ONLY) -->
     <div id="add-strafe-modal" class="modal-overlay hidden">
         <div class="modal-content" style="max-width: 650px;">
@@ -408,7 +468,6 @@
             </div>
             <div class="modal-body">
                 <form id="add-strafe-form">
-                    <!-- Spieler Auswahl -->
                     <div class="form-group" style="margin-bottom: 16px;">
                         <label
                             style="display: block; margin-bottom: 6px; color: #94a3b8; font-size: 0.85rem; font-weight: 600;">
@@ -420,27 +479,20 @@
                         </select>
                     </div>
 
-                    <!-- Strafenkatalog mit Suche & Kategorien -->
                     <div class="form-group" style="margin-bottom: 16px;">
-                        <div
-                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                            <label style="color: #94a3b8; font-size: 0.85rem; font-weight: 600;">
-                                Aus Strafenkatalog wählen
-                            </label>
-                        </div>
-
-                        <!-- Suchfeld -->
+                        <label
+                            style="color: #94a3b8; font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 6px;">
+                            Aus Strafenkatalog wählen
+                        </label>
                         <input type="text" id="strafe-search-input" class="person-select"
                             placeholder="🔍 Strafe suchen (z. B. Zu spät, Leibchen, 10€)..."
                             style="width: 100%; margin-bottom: 8px; box-sizing: border-box; font-size: 0.85rem;">
 
                         <div id="strafen-katalog-list"
                             style="max-height: 380px; overflow-y: auto; background: rgba(15, 23, 42, 0.6); border: 1px solid #334155; border-radius: 6px; padding: 8px 12px;">
-                            <!-- Dynamisch gefüllt via kasse.js -->
                         </div>
                     </div>
 
-                    <!-- Individuelle Strafe -->
                     <div class="form-group" style="margin-bottom: 16px;">
                         <label
                             style="display: block; margin-bottom: 6px; color: #94a3b8; font-size: 0.85rem; font-weight: 600;">
@@ -454,7 +506,6 @@
                         </div>
                     </div>
 
-                    <!-- Live-Gesamtsumme Anzeige -->
                     <div
                         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 10px 14px; background: rgba(56, 189, 248, 0.1); border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.2);">
                         <span style="font-weight: 600; font-size: 0.9rem; color: #cbd5e1;">Gesamtsumme:</span>
@@ -480,7 +531,6 @@
             </div>
             <div class="modal-body">
                 <form id="buchung-form">
-                    <!-- Buchungstyp (Segmented Control / Toggle Buttons) -->
                     <div class="form-group" style="margin-bottom: 20px;">
                         <label
                             style="display: block; margin-bottom: 8px; color: #94a3b8; font-size: 0.85rem; font-weight: 600;">
@@ -501,7 +551,6 @@
                         </div>
                     </div>
 
-                    <!-- Bezeichnung / Verwendungszweck -->
                     <div class="form-group" style="margin-bottom: 16px;">
                         <label
                             style="display: block; margin-bottom: 6px; color: #94a3b8; font-size: 0.85rem; font-weight: 600;">
@@ -512,7 +561,6 @@
                             style="width: 100%; box-sizing: border-box;" required>
                     </div>
 
-                    <!-- Betrag -->
                     <div class="form-group" style="margin-bottom: 20px;">
                         <label
                             style="display: block; margin-bottom: 6px; color: #94a3b8; font-size: 0.85rem; font-weight: 600;">
