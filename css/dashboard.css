@@ -172,6 +172,10 @@
 .quick-link-btn.handball-net .link-icon { color: #38bdf8; }
 .quick-link-btn.handball-net:hover { border-color: #f8ab38; background: rgba(216, 163, 18, 0.15); }
 
+.quick-link-btn.youtube .link-icon { color: #ff0000; }
+.quick-link-btn.youtube:hover { border-color: #ff0000; background: rgba(216, 81, 18, 0.15); }
+    
+
 /* MATCHDAY PREVIEW */
 .matchday-preview-container {
     display: flex;

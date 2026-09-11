@@ -4,15 +4,18 @@ const GH_CONFIG = {
     repo: 'teamhub',                  // Dein Repo Name
     strafenPath: 'data/strafen.json', // Pfad zur Geldstrafen-JSON
     kastenPath: 'data/kasten.json',   // Pfad zur Kasten-JSON
+    videosPath: 'data/videos.json',   // Pfad zur Videos-JSON
     branch: 'main'                    // Oder 'master'
 };
 
 const BASE_API_URL = `https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents`;
 const STRAFEN_API_URL = `${BASE_API_URL}/${GH_CONFIG.strafenPath}`;
 const KASTEN_API_URL = `${BASE_API_URL}/${GH_CONFIG.kastenPath}`;
+const VIDEOS_API_URL = `${BASE_API_URL}/${GH_CONFIG.videosPath}`;
 
 let cachedStrafenSHA = "";
 let cachedKastenSHA = "";
+let cachedVideosSHA = "";
 
 export function getStoredToken() {
     return localStorage.getItem('gh_kasse_token') || "";
@@ -212,5 +215,23 @@ export async function saveKaestenToRepo(kaestenArray) {
         'fix(kasten): Strafkästen via Team Hub aktualisiert'
     );
     if (result.success) cachedKastenSHA = result.sha;
+    return result.success;
+}
+
+// === VIDEOS (videos.json) ===
+export async function fetchVideosFromRepo() {
+    const result = await fetchJsonFromUrl(VIDEOS_API_URL);
+    cachedVideosSHA = result.sha;
+    return result.data;
+}
+
+export async function saveVideosToRepo(videosArray) {
+    const result = await saveJsonToUrl(
+        VIDEOS_API_URL, 
+        videosArray, 
+        cachedVideosSHA, 
+        'feat(videos): Videoarchiv via Team Hub aktualisiert'
+    );
+    if (result.success) cachedVideosSHA = result.sha;
     return result.success;
 }

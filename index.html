@@ -196,6 +196,11 @@
                         <i class="fa-brands fa-paypal link-icon"></i>
                         <span>Strafe zahlen</span>
                     </a>
+                    <!-- NEUER BUTTON FÜR VIDEOARCHIV -->
+                    <button class="quick-link-btn youtube" id="btn-open-videos">
+                        <i class="fa-brands fa-youtube link-icon"></i>
+                        <span>Videoarchiv</span>
+                    </button>
                     <a href="https://www.instagram.com/sg_iggelheimmeckenheim/" target="_blank"
                         class="quick-link-btn instagram">
                         <i class="fa-brands fa-instagram link-icon"></i>
@@ -332,14 +337,30 @@
                 <button class="modal-close" data-close="offeneKaesten">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="filter-toolbar" style="margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
-                    <label for="offene-kaesten-player-filter"
-                        style="font-size: 0.85rem; color: #94a3b8; font-weight: 600;">
-                        Spieler filtern:
-                    </label>
-                    <select id="offene-kaesten-player-filter" class="person-select" style="flex: 1;">
-                        <option value="ALL">Alle Spieler anzeigen</option>
-                    </select>
+                <!-- Filter Toolbar: Spieler & Typ -->
+                <div class="filter-toolbar"
+                    style="margin-bottom: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <label for="offene-kaesten-player-filter"
+                            style="display: block; font-size: 0.85rem; color: #94a3b8; font-weight: 600; margin-bottom: 4px;">
+                            Spieler filtern:
+                        </label>
+                        <select id="offene-kaesten-player-filter" class="person-select" style="width: 100%;">
+                            <option value="ALL">Alle Spieler anzeigen</option>
+                        </select>
+                    </div>
+
+                    <div style="width: 200px;">
+                        <label for="offene-kaesten-typ-filter"
+                            style="display: block; font-size: 0.85rem; color: #94a3b8; font-weight: 600; margin-bottom: 4px;">
+                            Typ filtern:
+                        </label>
+                        <select id="offene-kaesten-typ-filter" class="person-select" style="width: 100%;">
+                            <option value="ALL">Alle Typen (🍺 & 🎉)</option>
+                            <option value="KASTEN">🍺 Nur Strafkästen</option>
+                            <option value="KABINENFEST">🎉 Nur Kabinenfeste</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="table-container">
@@ -408,8 +429,7 @@
                         <label
                             style="display: block; margin-bottom: 6px; color: #94a3b8; font-size: 0.85rem; font-weight: 600;">Grund
                             / Anlass *</label>
-                        <input type="text" id="strafkasten-grund" class="person-select"
-                            placeholder="z. B. Geburtstag"
+                        <input type="text" id="strafkasten-grund" class="person-select" placeholder="z. B. Geburtstag"
                             style="width: 100%; box-sizing: border-box;" required>
                     </div>
 
@@ -578,6 +598,122 @@
             </div>
         </div>
     </div>
+
+    <!-- MAIN VIDEOARCHIV MODAL -->
+    <div id="videos-modal" class="modal-overlay">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <!-- Titel + Plus-Button zusammen in einer Flexbox -->
+                <div class="modal-title-wrapper">
+                    <h2>🎥 Videoarchiv & Replays</h2>
+                    <button id="btn-admin-manage-videos" class="admin-only btn-admin-action modal-admin-btn"
+                        title="Neues Video hinzufügen">
+                        ➕
+                    </button>
+                </div>
+                <button class="modal-close" data-close="videos">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Suche -->
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <input type="text" id="video-search-input" class="person-select"
+                        placeholder="🔍 Gegner, Datum oder Spiel suchen..."
+                        style="width: 100%; box-sizing: border-box;">
+                </div>
+
+                <!-- Neueste Spiele Grid (Maximal 5) -->
+                <div class="modal-section" style="margin-bottom: 24px;">
+                    <h3
+                        style="font-size: 0.75rem; letter-spacing: 0.05em; color: #64748b; margin-bottom: 12px; text-transform: uppercase;">
+                        Letzte Spiele & Replays (Top 5)
+                    </h3>
+                    <div class="card-grid" id="recent-videos-grid"></div>
+                </div>
+
+                <!-- Playlists & Archiv -->
+                <div class="modal-section">
+                    <h3
+                        style="font-size: 0.75rem; letter-spacing: 0.05em; color: #64748b; margin-bottom: 12px; text-transform: uppercase;">
+                        Playlists & Archiv
+                    </h3>
+                    <div class="card-grid">
+                        <!-- Klick öffnet jetzt das Sub-Modal statt YouTube direkt -->
+                        <div class="video-card playlist-card" id="btn-open-season-archive" style="cursor: pointer;">
+                            <div class="placeholder-icon">📁</div>
+                            <div class="card-info">
+                                <span class="card-title">Saison 2026/2027</span>
+                                <span class="card-subtitle">Alle 22 Heim- & Auswärtsspiele</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SAISON ARCHIV SUB-MODAL -->
+    <div id="season-archive-modal" class="modal-overlay">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button class="btn-today" id="btn-back-to-videos" style="padding: 4px 10px; font-size: 0.85rem;">❮
+                        Zurück</button>
+                    <h2 id="season-archive-title">📁 Saison 2026/2027</h2>
+                </div>
+                <button class="modal-close" data-close="seasonArchive">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Suche im Saison-Archiv -->
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <input type="text" id="season-search-input" class="person-select"
+                        placeholder="🔍 Spiel im Archiv suchen..." style="width: 100%; box-sizing: border-box;">
+                </div>
+
+                <!-- Raster für alle 22 Saisonspiele -->
+                <div class="card-grid" id="season-archive-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD VIDEO MODAL (ADMIN ONLY) -->
+    <div id="add-video-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <h2>🎥 Neues Video eintragen</h2>
+                <button class="modal-close" data-close="addVideo">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-add-video">
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <label
+                            style="display: block; font-size: 0.85rem; margin-bottom: 6px; color: #94a3b8; font-weight: 600;">Spiel
+                            / Titel *</label>
+                        <input type="text" id="video-title-input" class="person-select"
+                            placeholder="z. B. vs. HSG Landau 2" style="width: 100%; box-sizing: border-box;" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <label
+                            style="display: block; font-size: 0.85rem; margin-bottom: 6px; color: #94a3b8; font-weight: 600;">Datum
+                            / Typ *</label>
+                        <input type="text" id="video-sub-input" class="person-select"
+                            placeholder="z. B. 24.09.2026 • Highlights" style="width: 100%; box-sizing: border-box;"
+                            required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label
+                            style="display: block; font-size: 0.85rem; margin-bottom: 6px; color: #94a3b8; font-weight: 600;">YouTube
+                            URL *</label>
+                        <input type="url" id="video-url-input" class="person-select"
+                            placeholder="https://www.youtube.com/watch?v=..."
+                            style="width: 100%; box-sizing: border-box;" required>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%; background: #22c55e;">Video auf GitHub
+                        Speichern</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
 
     <!-- MAIN JAVASCRIPT -->
     <script type="module" src="js/main.js"></script>

@@ -13,6 +13,9 @@ export async function initKastenModule() {
         if (Array.isArray(remoteKaesten)) {
             kaestenData = remoteKaesten;
             updateKastenBadge();
+            // Befüllt beim Datenladen direkt das Modal & den Spieler-Filter
+            populateKastenPlayerFilter();
+            renderOffeneKaestenModal();
         }
     } catch (err) {
         console.warn("Ladefehler bei kasten.json:", err);
@@ -25,11 +28,21 @@ export function getKaestenData() {
 
 export function updateKastenBadge() {
     const badgeEl = document.getElementById('offene-kaesten-count-badge');
-    if (badgeEl) {
-        // Gesamtzahl aller offenen Kästen aufsummieren
-        const total = kaestenData.reduce((sum, item) => sum + (Number(item.anzahl) || 0), 0);
-        badgeEl.textContent = total;
-    }
+    if (!badgeEl) return;
+
+    // Separate Summen für Strafkästen (🍺) und Kabinenfeste (🎉)
+    const kaestenCount = kaestenData.reduce((sum, item) => {
+        const typ = item.typ || 'KASTEN';
+        return typ === 'KASTEN' ? sum + (Number(item.anzahl) || 0) : sum;
+    }, 0);
+
+    const festeCount = kaestenData.reduce((sum, item) => {
+        const typ = item.typ || 'KASTEN';
+        return typ === 'KABINENFEST' ? sum + (Number(item.anzahl) || 0) : sum;
+    }, 0);
+
+    // Formatierte Ausgabe: "Strafkästen / Kabinenfeste"
+    badgeEl.textContent = `${kaestenCount} 🍺 ${festeCount} 🎉`;
 }
 
 /**
@@ -45,7 +58,7 @@ export async function reduceKastenAnzahl(id, decrementBy = 1) {
 
     kaestenData[index].anzahl -= decrementBy;
 
-    // Falls 0 oder weniger Kästen übrig bleiben -> Eintrag löschen
+    // Falls 0 oder weniger übrig bleiben -> Eintrag löschen
     if (kaestenData[index].anzahl <= 0) {
         kaestenData.splice(index, 1);
     }
@@ -53,6 +66,7 @@ export async function reduceKastenAnzahl(id, decrementBy = 1) {
     const success = await saveKaestenToRepo(kaestenData);
     if (success) {
         updateKastenBadge();
+        renderOffeneKaestenModal();
     } else {
         // Rollback bei Speicherfehler
         kaestenData = previousState;
@@ -62,28 +76,33 @@ export async function reduceKastenAnzahl(id, decrementBy = 1) {
 }
 
 /**
- * Fügt einen neuen Kasten-Eintrag hinzu oder aggregiert, falls Grund & Spieler identisch sind
+ * Fügt einen neuen Kasten- oder Kabinenfest-Eintrag hinzu oder aggregiert
  */
-export async function addStrafkastenEntry(spieler, grund, anzahl) {
+export async function addStrafkastenEntry(spieler, grund, anzahl, typ = 'KASTEN') {
     const count = Number(anzahl) || 1;
+    
+    // Typ sauber vereinheitlichen (KASTEN vs KABINENFEST)
+    const normalizedTyp = String(typ).toUpperCase().includes('FEST') ? 'KABINENFEST' : 'KASTEN';
+
     const existingIndex = kaestenData.findIndex(
-        k => (k.name || '').toLowerCase() === (spieler || '').toLowerCase() &&
-             (k.grund || '').toLowerCase() === (grund || '').toLowerCase()
+        k => (k.name || k.spieler || '').toLowerCase() === (spieler || '').toLowerCase() &&
+             (k.grund || '').toLowerCase() === (grund || '').toLowerCase() &&
+             (k.typ || 'KASTEN') === normalizedTyp
     );
 
     const previousState = JSON.parse(JSON.stringify(kaestenData));
 
     if (existingIndex !== -1) {
-        // Bereits vorhandenen Eintrag aufsummieren
         kaestenData[existingIndex].anzahl = (Number(kaestenData[existingIndex].anzahl) || 0) + count;
     } else {
-        // Neuen Eintrag anlegen
         const newEntry = {
             id: Date.now(),
             datum: new Date().toLocaleDateString('de-DE'),
             name: spieler,
+            spieler: spieler, // Für beide Feldnamen-Varianten
             grund: grund,
-            anzahl: count
+            anzahl: count,
+            typ: normalizedTyp
         };
         kaestenData.push(newEntry);
     }
@@ -91,6 +110,7 @@ export async function addStrafkastenEntry(spieler, grund, anzahl) {
     const success = await saveKaestenToRepo(kaestenData);
     if (success) {
         updateKastenBadge();
+        renderOffeneKaestenModal();
     } else {
         kaestenData = previousState;
         updateKastenBadge();
@@ -98,7 +118,114 @@ export async function addStrafkastenEntry(spieler, grund, anzahl) {
     return success;
 }
 
-// Toggle-Logik für Strafkasten / Kabinenfest
+/**
+ * Rendert das Modal mit Unterstützung für Unterscheidung & Filterung von Strafkasten / Kabinenfest
+ */
+/**
+ * Befüllt das Spieler-Filter-Dropdown dynamisch mit den Spielern aus den Daten
+ */
+export function populateKastenPlayerFilter() {
+    const playerSelect = document.getElementById('offene-kaesten-player-filter');
+    if (!playerSelect) return;
+
+    const currentSelection = playerSelect.value;
+    
+    // Alle eindeutigen Namen aus kaestenData extrahieren
+    const uniquePlayers = [...new Set(kaestenData.map(item => item.name || item.spieler).filter(Boolean))].sort();
+
+    playerSelect.innerHTML = `<option value="ALL">Alle Spieler anzeigen</option>` +
+        uniquePlayers.map(p => `<option value="${p}">${p}</option>`).join('');
+
+    // Vorherige Auswahl beibehalten, falls vorhanden
+    if (uniquePlayers.includes(currentSelection)) {
+        playerSelect.value = currentSelection;
+    } else {
+        playerSelect.value = 'ALL';
+    }
+}
+
+/**
+ * Rendert das Modal mit Unterstützung für Unterscheidung & Filterung von Strafkasten / Kabinenfest
+ */
+export function renderOffeneKaestenModal() {
+    const tbody = document.getElementById('offene-kaesten-modal-body');
+    if (!tbody) return;
+
+    // Filter-Elemente abfragen
+    const spielerFilter = document.getElementById('offene-kaesten-player-filter')?.value || 'ALL';
+    const typFilter = document.getElementById('offene-kaesten-typ-filter')?.value || 'ALL';
+
+    let list = [...kaestenData];
+
+    // 1. Spieler-Filter anwenden
+    if (spielerFilter !== 'ALL') {
+        list = list.filter(item => (item.name || item.spieler) === spielerFilter);
+    }
+
+    // 2. Typ-Filter anwenden
+    if (typFilter !== 'ALL') {
+        list = list.filter(item => {
+            const itemTyp = String(item.typ || 'KASTEN').toUpperCase();
+            return typFilter === 'KABINENFEST' ? itemTyp.includes('FEST') : !itemTyp.includes('FEST');
+        });
+    }
+
+    if (list.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="5" style="text-align: center; color: #94a3b8; padding: 20px;">
+                    Keine offenen Einträge vorhanden 🎉
+                </td>
+            </tr>`;
+        return;
+    }
+
+    // Tabelle befüllen
+    tbody.innerHTML = list.map(item => {
+        // Explizite Typ-Prüfung für KASTEN vs KABINENFEST
+        const itemTyp = String(item.typ || '').toUpperCase();
+        const isKabinenfest = itemTyp === 'KABINENFEST' || itemTyp.includes('FEST');
+        
+        // Dynamische Icons & Stylings
+        const icon = isKabinenfest ? '🎉' : '🍺';
+        const badgeStyle = isKabinenfest 
+            ? 'background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3);' 
+            : 'background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3);';
+
+        const btnText = isKabinenfest ? `-1 🎉 Einlösen` : `-1 🍺 Mitgebracht`;
+
+        return `
+            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: #f8fafc;">
+                <td style="padding: 12px 10px; color: #94a3b8; font-size: 0.85rem;">${item.datum || '-'}</td>
+                <td style="padding: 12px 10px; font-weight: 700;">${item.name || item.spieler}</td>
+                <td style="padding: 12px 10px; color: #cbd5e1;">${item.grund}</td>
+                <td style="padding: 12px 10px; text-align: right;">
+                    <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; ${badgeStyle}">
+                        ${item.anzahl}x ${icon}
+                    </span>
+                </td>
+                <td style="padding: 12px 10px; text-align: right;">
+                    <button class="btn-today btn-reduce-kasten" data-id="${item.id}" style="padding: 4px 8px;">
+                        ${btnText}
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+
+    // Event-Listener für den Aktions-Button
+    tbody.querySelectorAll('.btn-reduce-kasten').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const id = e.currentTarget.getAttribute('data-id');
+            if (id) {
+                e.currentTarget.disabled = true;
+                await reduceKastenAnzahl(id, 1);
+            }
+        });
+    });
+}
+
+// Toggle-Logik für Strafkasten / Kabinenfest im Formular
 function setupStrafkastenToggle() {
     const labelKasten = document.getElementById('label-strafkasten-kasten');
     const labelFest = document.getElementById('label-strafkasten-fest');
@@ -108,16 +235,16 @@ function setupStrafkastenToggle() {
         radio.addEventListener('change', () => {
             if (radio.value === 'KASTEN') {
                 labelKasten?.classList.add('active-einnahme');
-                labelKasten.style.color = '#0f172a';
+                if (labelKasten) labelKasten.style.color = '#0f172a';
 
                 labelFest?.classList.remove('active-einnahme');
-                labelFest.style.color = '#94a3b8';
+                if (labelFest) labelFest.style.color = '#94a3b8';
             } else {
                 labelFest?.classList.add('active-einnahme');
-                labelFest.style.color = '#0f172a';
+                if (labelFest) labelFest.style.color = '#0f172a';
 
                 labelKasten?.classList.remove('active-einnahme');
-                labelKasten.style.color = '#94a3b8';
+                if (labelKasten) labelKasten.style.color = '#94a3b8';
             }
         });
     });
@@ -125,6 +252,8 @@ function setupStrafkastenToggle() {
 
 document.addEventListener('DOMContentLoaded', async () => {
     setupStrafkastenToggle();
+    document.getElementById('offene-kaesten-player-filter')?.addEventListener('change', renderOffeneKaestenModal);
+    document.getElementById('offene-kaesten-typ-filter')?.addEventListener('change', renderOffeneKaestenModal);
 });
 
 // === ROTATIONS-KARUSSELL ===
@@ -199,7 +328,6 @@ export function initKastenCarousel() {
             </div>
         `).join('');
 
-        // Klick auf ein Element zentriert dieses
         track.querySelectorAll('.carousel-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 const idx = parseInt(e.currentTarget.getAttribute('data-index'), 10);
@@ -213,7 +341,6 @@ export function initKastenCarousel() {
         updateCarousel();
     }
 
-    // Einmalig Event-Listener registrieren (Schutz vor doppelten Listenern)
     if (!track.dataset.initialized) {
         track.dataset.initialized = "true";
 
@@ -245,7 +372,6 @@ export function initKastenCarousel() {
             }
         });
 
-        // Mausrad-Unterstützung
         track.parentElement?.addEventListener('wheel', (e) => {
             e.preventDefault();
             if (e.deltaY > 0 && currentIndex < filteredData.length - 1) {

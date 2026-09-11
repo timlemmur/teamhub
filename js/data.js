@@ -28,7 +28,7 @@ export const strafenData = {
     strafen: [
         { kat: "Allgemein", text: "Saisonbeitrag (einmalig)", strafe: "100 € / 70 € (ermäßigt)" },
         { kat: "Allgemein", text: "Sachen in der Halle vergessen (max. 10€)", strafe: "2,00 € / Teil" },
-        { kat: "Allgemein", text: "Kasten vergessen", strafe: "1 Kasten" },
+        { kat: "Allgemein", text: "Kasten vergessen", strafe: "1 Kabinenfest" },
         { kat: "Allgemein", text: "Geburtstag / Zeitung", strafe: "1 Kasten" },
         { kat: "Allgemein", text: "Bier verschüttet", strafe: "5,00 €" },
         { kat: "Allgemein", text: "Amt vergessen (Fußball, Eisbox, etc.)", strafe: "3,00 €" },
