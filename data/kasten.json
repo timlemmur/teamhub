@@ -7,5 +7,14 @@
     "grund": "30. Tor (gg. Offenbach)",
     "anzahl": 1,
     "typ": "KASTEN"
+  },
+  {
+    "id": 1789135920021,
+    "datum": "11.9.2026",
+    "name": "Harry",
+    "spieler": "Harry",
+    "grund": "Kasten vergessen",
+    "anzahl": 1,
+    "typ": "KABINENFEST"
   }
 ]
