@@ -1,5 +1,14 @@
 [
   {
+    "id": 1789676974931,
+    "datum": "17.9.2026",
+    "name": "Sommer",
+    "grund": "Geld für Klamotten",
+    "betrag": 104,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
     "id": 1789676941038,
     "datum": "17.9.2026",
     "name": "Jule",
