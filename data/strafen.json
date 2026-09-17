@@ -41,8 +41,8 @@
     "name": "Nils",
     "grund": "Geld für Klamotten",
     "betrag": 107,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "17.9.2026"
   },
   {
     "id": 1789676845998,
