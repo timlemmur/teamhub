@@ -59,8 +59,8 @@
     "name": "Löwe",
     "grund": "Geld für Klamotten",
     "betrag": 144,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "17.9.2026"
   },
   {
     "id": 1789675672576,
