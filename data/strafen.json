@@ -50,8 +50,8 @@
     "name": "Gordon",
     "grund": "Geld für Klamotten",
     "betrag": 83,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "17.9.2026"
   },
   {
     "id": 1789676767112,
