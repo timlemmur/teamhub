@@ -221,8 +221,8 @@
     "name": "Sommer",
     "grund": "Bier verschüttet",
     "betrag": 5,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "18.9.2026"
   },
   {
     "id": 1788967725541,
