@@ -61,7 +61,7 @@ export const kioskData = [
     { staffel: "M-OL (SG1)", gegner: "TSV Speyer", datum: "08.11.2026", uhrzeit: "18:00", kasse: "Julian", kiosk: ["Jannis", "Len", "Janton", "Jule"], halle: "Iggelheim" },
     { staffel: "M-BZK-2 (SG3)", gegner: "TSV Kandel 2", datum: "22.11.2026", uhrzeit: "14:00", kasse: "Simon", kiosk: ["Sommer", "Rene", "Löwe", "Len"], halle: "Iggelheim" },
     { staffel: "M-BZK-2 (SG3)", gegner: "HSG Greth/Maxd", datum: "06.12.2026", uhrzeit: "18:00", kasse: "Simon", kiosk: ["Marlon", "Mateo", "Nils", "Julian"], halle: "Iggelheim" },
-    { staffel: "M-BZK-2 (SG3)", gegner: "SG Saulheim", datum: "24.01.2027", uhrzeit: "16:00", kasse: "Harry", kiosk: ["Sommer", "Melf", "Janton", "Nils"], halle: "Iggelheim" },
+    { staffel: "M-OL (SG1)", gegner: "SG Saulheim", datum: "24.01.2027", uhrzeit: "16:00", kasse: "Harry", kiosk: ["Sommer", "Melf", "Janton", "Nils"], halle: "Iggelheim" },
     { staffel: "M-BZK-2 (SG3)", gegner: "TuS Neuhofen 2", datum: "13.02.2027", uhrzeit: "17:00", kasse: "Harry", kiosk: ["Löwe", "Nils O.", "Jonathan", "Len"], halle: "Meckenheim" },
     { staffel: "M-OL (SG1)", gegner: "MSG KL/Dans", datum: "28.02.2027", uhrzeit: "18:00", kasse: "Harry", kiosk: ["Perez", "Nils", "Fabi", "Melf"], halle: "Iggelheim" },
     { staffel: "M-BZK-2 (SG3)", gegner: "TV Offenbach 4", datum: "20.03.2027", uhrzeit: "16:00", kasse: "Jule", kiosk: ["Perez", "Jonathan", "Mateo", "Jannis"], halle: "Meckenheim" },
