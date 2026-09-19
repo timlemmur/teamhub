@@ -16,5 +16,14 @@
     "grund": "Kasten vergessen",
     "anzahl": 1,
     "typ": "KABINENFEST"
+  },
+  {
+    "id": 1789851896179,
+    "datum": "19.9.2026",
+    "name": "Patrick",
+    "spieler": "Patrick",
+    "grund": "30. Tor (gg. Lingenfeld)",
+    "anzahl": 1,
+    "typ": "KASTEN"
   }
 ]
