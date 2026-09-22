@@ -96,33 +96,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderSeasonArchiveModal('2026/2027');
     });
 
-    // Formular: Neues Video durch Admin speichern [source: 6]
-    document.getElementById('form-add-video')?.addEventListener('submit', async (e) => { // [source: 6]
-        e.preventDefault(); // [source: 6]
+    // Formular: Neues Video durch Admin speichern
+    document.getElementById('form-add-video')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-        const title = document.getElementById('video-title-input')?.value; // [source: 6]
-        const sub = document.getElementById('video-sub-input')?.value; // [source: 6]
-        const url = document.getElementById('video-url-input')?.value; // [source: 6]
+        const title = document.getElementById('video-title-input')?.value;
+        const sub = document.getElementById('video-sub-input')?.value;
+        const url = document.getElementById('video-url-input')?.value;
+        const category = document.getElementById('video-category-select')?.value || 'Full Game';
 
-        if (!title || !url) return; // [source: 6]
+        if (!title || !url) return;
 
-        const submitBtn = e.target.querySelector('button[type="submit"]'); // [source: 6]
-        if (submitBtn) { // [source: 6]
-            submitBtn.textContent = 'Speichere in GitHub...'; // [source: 6]
-            submitBtn.disabled = true; // [source: 6]
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.textContent = 'Speichere in GitHub...';
+            submitBtn.disabled = true;
         }
 
-        const success = await addVideoEntry(title, sub, url); // [source: 6]
-        if (success) { // [source: 6]
-            closeModule('addVideo'); // [source: 6]
-            e.target.reset(); // [source: 6]
-            renderVideosModal(); // [source: 6]
-            alert("Video erfolgreich in GitHub gespeichert!"); // [source: 6]
+        // Die Kategorie als 4. Parameter mitgeben:
+        const success = await addVideoEntry(title, sub, url, category);
+        if (success) {
+            closeModule('addVideo');
+            e.target.reset();
+            renderVideosModal();
+            alert("Video erfolgreich in GitHub gespeichert!");
         }
 
-        if (submitBtn) { // [source: 6]
-            submitBtn.textContent = 'Video auf GitHub Speichern'; // [source: 6]
-            submitBtn.disabled = false; // [source: 6]
+        if (submitBtn) {
+            submitBtn.textContent = 'Video auf GitHub Speichern';
+            submitBtn.disabled = false;
         }
     });
 
@@ -222,6 +224,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Admin UI-Status prüfen [source: 6]
     checkAdminState(); // [source: 6]
+
+    window.openModule = openModule;
+    window.closeModule = closeModule;
 });
 
 // Befüllt die Spieler-Auswahl im Kasten-Modal [source: 6]
