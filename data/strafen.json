@@ -14,8 +14,8 @@
     "name": "Jule",
     "grund": "Geld für Klamotten",
     "betrag": 144,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "24.9.2026"
   },
   {
     "id": 1789676927736,
