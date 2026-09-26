@@ -5,8 +5,8 @@
     "name": "Gordon",
     "grund": "Standabbau Wuma verschlafen",
     "betrag": 20,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "26.9.2026"
   },
   {
     "id": 1789676974931,
