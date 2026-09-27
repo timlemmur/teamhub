@@ -1,21 +1,12 @@
 [
   {
-    "id": 1790534255614,
+    "id": 1790534510810,
     "datum": "27.9.2026",
-    "name": "Gordon",
+    "name": "Melf",
     "grund": "Bier verschüttet",
     "betrag": 5,
     "bezahlt": false,
     "bezahltAm": null
-  },
-  {
-    "id": 1790429376216,
-    "datum": "26.9.2026",
-    "name": "Gordon",
-    "grund": "Standabbau Wuma verschlafen",
-    "betrag": 20,
-    "bezahlt": true,
-    "bezahltAm": "26.9.2026"
   },
   {
     "id": 1789676974931,
