@@ -1,14 +1,5 @@
 [
   {
-    "id": 1790713562679,
-    "datum": "29.9.2026",
-    "name": "Josh",
-    "grund": "Unentschuldigt gefehlt",
-    "betrag": 15,
-    "bezahlt": false,
-    "bezahltAm": null
-  },
-  {
     "id": 1790713518702,
     "datum": "29.9.2026",
     "name": "Jule",
