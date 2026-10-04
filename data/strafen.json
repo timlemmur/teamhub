@@ -1,5 +1,14 @@
 [
   {
+    "id": 1791129968910,
+    "datum": "4.10.2026",
+    "name": "Melf",
+    "grund": "2min wegen Undiszipliniertheit",
+    "betrag": 10,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
     "id": 1791129924372,
     "datum": "4.10.2026",
     "name": "Jule",
