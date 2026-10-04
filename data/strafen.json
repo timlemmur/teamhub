@@ -77,8 +77,8 @@
     "name": "Janton",
     "grund": "Bier verschüttet",
     "betrag": 5,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "4.10.2026"
   },
   {
     "id": 1790534599809,
