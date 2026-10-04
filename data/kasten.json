@@ -25,5 +25,14 @@
     "grund": "30. Tor (gg. Lingenfeld)",
     "anzahl": 1,
     "typ": "KASTEN"
+  },
+  {
+    "id": 1791127164872,
+    "datum": "4.10.2026",
+    "name": "Jule",
+    "spieler": "Jule",
+    "grund": "30 Tor gegen trifels am 4.10",
+    "anzahl": 1,
+    "typ": "KASTEN"
   }
 ]
