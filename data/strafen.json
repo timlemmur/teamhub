@@ -1,14 +1,5 @@
 [
   {
-    "id": 1792597707769,
-    "datum": "21.10.2026",
-    "name": "Tim",
-    "grund": "Test",
-    "betrag": 15,
-    "bezahlt": false,
-    "bezahltAm": null
-  },
-  {
     "id": 1792597080438,
     "datum": "21.10.2026",
     "name": "Gordon",
