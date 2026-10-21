@@ -5,8 +5,8 @@
     "name": "Gordon",
     "grund": "WuMa Abbau vergessen",
     "betrag": 20,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "21.10.2026"
   },
   {
     "id": 1792596949221,
