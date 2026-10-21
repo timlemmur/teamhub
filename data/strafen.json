@@ -1,5 +1,15 @@
 [
   {
+    "id": 1792596419087,
+    "datum": "21.10.2026",
+    "name": "Mannschaftskasse",
+    "grund": "Rückzahlung Geld für Trainingsanzüge an Förderverein",
+    "betrag": -783,
+    "bezahlt": true,
+    "bezahltAm": "21.10.2026",
+    "type": "ausgabe"
+  },
+  {
     "id": 1791922901279,
     "datum": "13.10.2026",
     "name": "Harry",
