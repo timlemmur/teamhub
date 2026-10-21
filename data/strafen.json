@@ -1,15 +1,5 @@
 [
   {
-    "id": 1792596500609,
-    "datum": "21.10.2026",
-    "name": "Mannschaftskasse",
-    "grund": "Pizza bei Videoanalyse (08.10)",
-    "betrag": 66,
-    "bezahlt": true,
-    "bezahltAm": "21.10.2026",
-    "type": "einnahme"
-  },
-  {
     "id": 1792596419087,
     "datum": "21.10.2026",
     "name": "Mannschaftskasse",
