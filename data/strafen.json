@@ -5,8 +5,8 @@
     "name": "Nils",
     "grund": "Saisonbeitrag (Standard)",
     "betrag": 100,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "21.10.2026"
   },
   {
     "id": 1792596824027,
