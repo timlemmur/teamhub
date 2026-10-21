@@ -1,5 +1,14 @@
 [
   {
+    "id": 1792597080438,
+    "datum": "21.10.2026",
+    "name": "Gordon",
+    "grund": "WuMa Abbau vergessen",
+    "betrag": 20,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
     "id": 1792596949221,
     "datum": "21.10.2026",
     "name": "Nils",
