@@ -250,8 +250,8 @@
     "name": "Fabi",
     "grund": "Zu spät zum Training (max. 10€) (2x)",
     "betrag": 2,
-    "bezahlt": false,
-    "bezahltAm": null
+    "bezahlt": true,
+    "bezahltAm": "21.10.2026"
   },
   {
     "id": 1789069387854,
