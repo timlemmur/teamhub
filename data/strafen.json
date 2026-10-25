@@ -1,14 +1,5 @@
 [
   {
-    "id": 1792960798574,
-    "datum": "25.10.2026",
-    "name": "Tim",
-    "grund": "Sachen in der Halle vergessen (max. 10€)",
-    "betrag": 2,
-    "bezahlt": false,
-    "bezahltAm": null
-  },
-  {
     "id": 1792960239941,
     "datum": "25.10.2026",
     "name": "Tim",
