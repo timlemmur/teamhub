@@ -1,5 +1,14 @@
 [
   {
+    "id": 1794418204125,
+    "datum": "11.11.2026",
+    "name": "Janton",
+    "grund": "Bier verschüttet",
+    "betrag": 5,
+    "bezahlt": false,
+    "bezahltAm": null
+  },
+  {
     "id": 1794418161073,
     "datum": "11.11.2026",
     "name": "Melf",
