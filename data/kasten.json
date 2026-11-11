@@ -43,5 +43,14 @@
     "grund": "30 Tor gegen Speyer ",
     "anzahl": 1,
     "typ": "KASTEN"
+  },
+  {
+    "id": 1794420379319,
+    "datum": "11.11.2026",
+    "name": "Perez",
+    "spieler": "Perez",
+    "grund": "Strafe Laut Gordon 11.11.26",
+    "anzahl": 1,
+    "typ": "KABINENFEST"
   }
 ]
