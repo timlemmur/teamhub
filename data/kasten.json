@@ -34,5 +34,14 @@
     "grund": "30 Tor gegen trifels am 4.10",
     "anzahl": 1,
     "typ": "KASTEN"
+  },
+  {
+    "id": 1794420328374,
+    "datum": "11.11.2026",
+    "name": "Jannis",
+    "spieler": "Jannis",
+    "grund": "30 Tor gegen Speyer ",
+    "anzahl": 1,
+    "typ": "KASTEN"
   }
 ]
