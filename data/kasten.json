@@ -43,14 +43,5 @@
     "grund": "30 Tor gegen Speyer ",
     "anzahl": 1,
     "typ": "KASTEN"
-  },
-  {
-    "id": 1794419120662,
-    "datum": "11.11.2026",
-    "name": "Perez",
-    "spieler": "Perez",
-    "grund": "Kiste Bier Laut Gordon am 11.11.26",
-    "anzahl": 1,
-    "typ": "KASTEN"
   }
 ]
